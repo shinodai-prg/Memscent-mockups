@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ログイン | Memscent</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        perfume: {
+                            purple: '#8B4B7C',
+                            gold: '#D4A574',
+                            blue: '#A8C8E1',
+                            base: '#FAFAFA'
+                        }
+                    },
+                    fontFamily: {
+                        'noto': ['Noto Sans JP', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; }
+        .gradient-bg {
+            background: linear-gradient(135deg, #8B4B7C 0%, #D4A574 50%, #A8C8E1 100%);
+        }
+        .form-focus:focus {
+            outline: none;
+            border-color: #8B4B7C;
+            box-shadow: 0 0 0 3px rgba(139, 75, 124, 0.1);
+        }
+        .social-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+        }
+        
+        /* レスポンシブ改善 */
+        @media (max-width: 768px) {
+            .login-container {
+                margin: 1rem;
+                padding: 1.5rem;
+                border-radius: 1rem;
+            }
+            
+            .gradient-bg {
+                min-height: 100vh;
+                padding: 1rem 0;
+            }
+            
+            header .text-2xl {
+                font-size: 1.5rem;
+            }
+            
+            header .hidden.sm\\:block {
+                display: none !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .login-container {
+                margin: 0.5rem;
+                padding: 1rem;
+            }
+            
+            .text-3xl {
+                font-size: 1.8rem;
+            }
+            
+            .social-btn {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            header .flex {
+                padding: 0.5rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- ヘッダー（シンプル版） -->
+    <header class="bg-white bg-opacity-90 backdrop-blur-lg shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-3 sm:py-4">
+                <!-- ロゴ -->
+                <div class="flex items-center">
+                    <a href="index.html" class="flex items-center">
+                        <h1 class="text-xl sm:text-2xl font-semibold text-perfume-purple font-serif" style="letter-spacing: -0.01em;">Memscent</h1>
+                        <span class="ml-2 text-sm text-gray-500 hidden sm:block font-light">あなたの香りの記憶</span>
+                    </a>
+                </div>
+                
+                <!-- 戻るリンク -->
+                <div class="flex items-center space-x-4">
+                    <a href="index.html" class="text-gray-600 hover:text-perfume-purple font-medium transition-colors text-sm sm:text-base">
+                        ← ホームに戻る
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <div class="flex items-center justify-center min-h-screen px-4 py-6 sm:py-8">
+        <div class="login-container rounded-xl sm:rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-md">
+            <!-- ヘッダー -->
+            <div class="text-center mb-6 sm:mb-8">
+                <h2 class="text-2xl sm:text-3xl font-light text-gray-900 mb-2">ログイン</h2>
+                <p class="text-gray-600 text-sm sm:text-base">香りの記憶にアクセスしましょう</p>
+            </div>
+
+            <!-- ログインフォーム -->
+            <form id="loginForm" class="space-y-6">
+                <!-- メールアドレス -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                        メールアドレス
+                    </label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        required
+                        class="form-focus w-full px-4 py-3 border border-gray-300 rounded-lg transition-all duration-200"
+                        placeholder="your@email.com"
+                    >
+                    <div class="text-red-500 text-sm mt-1 hidden" id="email-error">
+                        有効なメールアドレスを入力してください
+                    </div>
+                </div>
+
+                <!-- パスワード -->
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                        パスワード
+                    </label>
+                    <div class="relative">
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            required
+                            class="form-focus w-full px-4 py-3 border border-gray-300 rounded-lg transition-all duration-200 pr-12"
+                            placeholder="パスワードを入力"
+                        >
+                        <button
+                            type="button"
+                            id="togglePassword"
+                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                        >
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="text-red-500 text-sm mt-1 hidden" id="password-error">
+                        パスワードを入力してください
+                    </div>
+                </div>
+
+                <!-- ログインオプション -->
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input
+                            id="remember-me"
+                            name="remember-me"
+                            type="checkbox"
+                            class="h-4 w-4 text-perfume-purple focus:ring-perfume-purple border-gray-300 rounded"
+                        >
+                        <label for="remember-me" class="ml-2 block text-sm text-gray-700">
+                            ログイン状態を保持
+                        </label>
+                    </div>
+                    <div class="text-sm">
+                        <a href="#" onclick="openForgotPasswordModal()" class="text-perfume-purple hover:text-perfume-gold transition-colors">
+                            パスワードを忘れた方
+                        </a>
+                    </div>
+                </div>
+
+                <!-- ログインボタン -->
+                <div>
+                    <button
+                        type="submit"
+                        class="w-full bg-perfume-purple text-white py-3 px-4 rounded-lg font-medium hover:bg-opacity-90 transition-all duration-200 transform hover:scale-[1.02]"
+                    >
+                        ログイン
+                    </button>
+                </div>
+
+                <!-- エラーメッセージ -->
+                <div class="text-red-500 text-sm text-center hidden" id="login-error">
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-3">
+                        <p class="font-medium">ログインに失敗しました</p>
+                        <p class="text-xs mt-1">メールアドレスまたはパスワードが正しくありません</p>
+                        <p class="text-xs mt-2 text-gray-600">
+                            デモ: <code class="bg-gray-100 px-1 rounded">demo@memscent.com</code> / <code class="bg-gray-100 px-1 rounded">demo123</code>
+                        </p>
+                    </div>
+                </div>
+            </form>
+
+            <!-- ソーシャルログイン -->
+            <div class="mt-8">
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-4 bg-white text-gray-500">または</span>
+                    </div>
+                </div>
+
+                <div class="mt-6 space-y-3">
+                    <!-- Googleログイン -->
+                    <button
+                        type="button"
+                        onclick="loginWithGoogle()"
+                        class="social-btn w-full flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-all duration-200"
+                    >
+                        <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        Googleでログイン
+                    </button>
+
+                    <!-- Xログイン（Phase 2実装予定） -->
+                    <button
+                        type="button"
+                        disabled
+                        class="social-btn w-full flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg bg-gray-100 text-gray-400 cursor-not-allowed"
+                    >
+                        <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                        </svg>
+                        X（旧Twitter）でログイン（準備中）
+                    </button>
+                </div>
+            </div>
+
+            <!-- 新規登録リンク -->
+            <div class="mt-8 text-center">
+                <p class="text-gray-600">
+                    アカウントをお持ちでない方は
+                    <a href="register.html" class="text-perfume-purple hover:text-perfume-gold font-medium transition-colors">
+                        新規登録
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- パスワードリセットモーダル -->
+    <div id="forgotPasswordModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-xl max-w-md w-full p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-semibold text-gray-900">パスワードリセット</h3>
+                    <button onclick="closeForgotPasswordModal()" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <form id="forgotPasswordForm">
+                    <div class="mb-4">
+                        <label for="reset-email" class="block text-sm font-medium text-gray-700 mb-2">
+                            メールアドレス
+                        </label>
+                        <input
+                            type="email"
+                            id="reset-email"
+                            name="reset-email"
+                            required
+                            class="form-focus w-full px-4 py-3 border border-gray-300 rounded-lg"
+                            placeholder="登録済みのメールアドレス"
+                        >
+                    </div>
+                    
+                    <div class="mb-6">
+                        <p class="text-sm text-gray-600">
+                            パスワードリセット用のリンクをメールでお送りします。
+                        </p>
+                    </div>
+                    
+                    <div class="flex space-x-4">
+                        <button
+                            type="button"
+                            onclick="closeForgotPasswordModal()"
+                            class="flex-1 border border-gray-300 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+                        >
+                            キャンセル
+                        </button>
+                        <button
+                            type="submit"
+                            class="flex-1 bg-perfume-purple text-white py-3 rounded-lg font-medium hover:bg-opacity-90 transition-colors"
+                        >
+                            送信
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // ログインフォーム処理
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // バリデーション
+            let isValid = true;
+            
+            if (!email || !isValidEmail(email)) {
+                showError('email-error');
+                isValid = false;
+            } else {
+                hideError('email-error');
+            }
+            
+            if (!password) {
+                showError('password-error');
+                isValid = false;
+            } else {
+                hideError('password-error');
+            }
+            
+            if (isValid) {
+                // ログイン処理（実装時にAPIコール）
+                performLogin(email, password);
+            }
+        });
+        
+        // メールアドレスバリデーション
+        function isValidEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+        
+        // エラー表示/非表示
+        function showError(elementId) {
+            document.getElementById(elementId).classList.remove('hidden');
+        }
+        
+        function hideError(elementId) {
+            document.getElementById(elementId).classList.add('hidden');
+        }
+        
+        // ログイン処理（デモ用）
+        function performLogin(email, password) {
+            // デバッグ情報をコンソールに出力
+            console.log('Login attempt:', { email, password });
+            console.log('Email match:', email === 'demo@memscent.com');
+            console.log('Password match:', password === 'demo123');
+            
+            // ローディング表示
+            const loginButton = document.querySelector('button[type="submit"]');
+            const originalText = loginButton.textContent;
+            loginButton.textContent = 'ログイン中...';
+            loginButton.disabled = true;
+            
+            // 実際の実装時はAPI呼び出し
+            setTimeout(() => {
+                // デモ用の成功パターン
+                if (email === 'demo@memscent.com' && password === 'demo123') {
+                    alert('ログインに成功しました！\nホームページに移動します。');
+                    // 実際にはindex.htmlに移動
+                    console.log('Login successful - redirecting to index.html');
+                    window.location.href = 'index.html';
+                } else {
+                    // ログイン失敗時の処理
+                    console.log('Login failed - showing error message');
+                    document.getElementById('login-error').classList.remove('hidden');
+                    setTimeout(() => {
+                        document.getElementById('login-error').classList.add('hidden');
+                    }, 5000);
+                }
+                
+                // ボタンを元に戻す
+                loginButton.textContent = originalText;
+                loginButton.disabled = false;
+            }, 1000); // 1秒のローディング時間
+        }
+        
+        // パスワード表示切り替え
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // アイコン変更
+            const icon = this.querySelector('svg');
+            if (type === 'text') {
+                icon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"></path>
+                `;
+            } else {
+                icon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                `;
+            }
+        });
+        
+        // Googleログイン（Phase 2実装予定）
+        function loginWithGoogle() {
+            alert('Googleログイン機能は開発中です。\nPhase 2で実装予定です。');
+        }
+        
+        // パスワードリセットモーダル
+        function openForgotPasswordModal() {
+            document.getElementById('forgotPasswordModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeForgotPasswordModal() {
+            document.getElementById('forgotPasswordModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+        
+        // パスワードリセット処理
+        document.getElementById('forgotPasswordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('reset-email').value;
+            
+            if (isValidEmail(email)) {
+                alert(`${email} にパスワードリセット用のリンクを送信しました。\nメールをご確認ください。`);
+                closeForgotPasswordModal();
+                document.getElementById('reset-email').value = '';
+            } else {
+                alert('有効なメールアドレスを入力してください。');
+            }
+        });
+        
+        // モーダル外クリックで閉じる
+        document.getElementById('forgotPasswordModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeForgotPasswordModal();
+            }
+        });
+        
+        // デモ用アカウント情報表示
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                const demoInfo = document.createElement('div');
+                demoInfo.className = 'fixed top-4 right-4 bg-blue-600 text-white p-4 rounded-lg shadow-lg max-w-sm z-50';
+                demoInfo.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h4 class="font-semibold mb-2 flex items-center">
+                                <span class="mr-2">💡</span>デモアカウント
+                            </h4>
+                            <div class="space-y-1 text-sm">
+                                <div class="bg-blue-500 p-2 rounded">
+                                    <p class="font-mono">demo@memscent.com</p>
+                                </div>
+                                <div class="bg-blue-500 p-2 rounded">
+                                    <p class="font-mono">demo123</p>
+                                </div>
+                            </div>
+                            <p class="text-xs opacity-90 mt-2">↑ コピーしてご利用ください</p>
+                        </div>
+                        <button onclick="this.parentElement.parentElement.remove()" class="text-white opacity-75 hover:opacity-100 ml-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(demoInfo);
+                
+                // 20秒後に自動で消す
+                setTimeout(() => {
+                    if (demoInfo.parentElement) {
+                        demoInfo.remove();
+                    }
+                }, 20000);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新規登録 | Memscent</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        perfume: {
+                            purple: '#8B4B7C',
+                            gold: '#D4A574',
+                            blue: '#A8C8E1',
+                            base: '#FAFAFA'
+                        }
+                    },
+                    fontFamily: {
+                        'noto': ['Noto Sans JP', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; }
+        .gradient-bg {
+            background: linear-gradient(135deg, #8B4B7C 0%, #D4A574 50%, #A8C8E1 100%);
+        }
+        .form-focus:focus {
+            outline: none;
+            border-color: #8B4B7C;
+            box-shadow: 0 0 0 3px rgba(139, 75, 124, 0.1);
+        }
+        .social-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .register-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+        }
+        .step-indicator {
+            background: linear-gradient(90deg, #8B4B7C 0%, #D4A574 100%);
+        }
+        .step-circle {
+            transition: all 0.3s ease;
+        }
+        .step-circle.active {
+            background: #8B4B7C;
+            color: white;
+            transform: scale(1.1);
+        }
+        .step-circle.completed {
+            background: #10b981;
+            color: white;
+        }
+        .password-strength {
+            height: 4px;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        .strength-weak { background: #ef4444; width: 25%; }
+        .strength-fair { background: #f59e0b; width: 50%; }
+        .strength-good { background: #10b981; width: 75%; }
+        .strength-strong { background: #059669; width: 100%; }
+        
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            /* ヘッダーの調整 */
+            header h1 {
+                font-size: 1.5rem;
+            }
+            
+            header .hidden.sm\\:block {
+                display: none !important;
+            }
+            
+            /* 登録コンテナの調整 */
+            .register-container {
+                margin: 1rem;
+                padding: 1.5rem;
+                border-radius: 1rem;
+            }
+            
+            .gradient-bg {
+                min-height: 100vh;
+                padding: 1rem 0;
+            }
+            
+            /* ステップインジケーターの調整 */
+            .step-indicator {
+                flex-direction: column;
+                gap: 0.5rem;
+                padding: 1rem;
+            }
+            
+            .step-circle {
+                margin: 0 auto;
+            }
+            
+            /* フォームの調整 */
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            /* ボタンの調整 */
+            .form-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .form-buttons button {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            /* さらに小さい画面での調整 */
+            .register-container {
+                margin: 0.5rem;
+                padding: 1rem;
+            }
+            
+            .text-3xl {
+                font-size: 1.8rem;
+            }
+            
+            .social-btn {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .step-text {
+                font-size: 0.875rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            /* 極小画面での調整 */
+            header .flex {
+                padding: 0.5rem 1rem;
+            }
+            
+            .register-container {
+                margin: 0;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+            
+            .input-field {
+                font-size: 1rem; /* iOS Safariでのズーム防止 */
+            }
+            
+            .form-section {
+                padding: 1rem 0;
+            }
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- ヘッダー（シンプル版） -->
+    <header class="bg-white bg-opacity-90 backdrop-blur-lg shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <!-- ロゴ -->
+                <div class="flex items-center">
+                    <a href="index.html" class="flex items-center">
+                        <h1 class="text-2xl font-semibold text-perfume-purple font-serif" style="letter-spacing: -0.01em;">Memscent</h1>
+                        <span class="ml-2 text-sm text-gray-500 hidden sm:block font-light">あなたの香りの記憶</span>
+                    </a>
+                </div>
+                
+                <!-- ナビゲーション -->
+                <div class="flex items-center space-x-4">
+                    <a href="login.html" class="text-gray-600 hover:text-perfume-purple font-medium transition-colors">
+                        ログイン
+                    </a>
+                    <a href="index.html" class="text-gray-600 hover:text-perfume-purple font-medium transition-colors">
+                        ← ホームに戻る
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <div class="flex items-center justify-center min-h-screen px-4 py-8">
+        <div class="register-container rounded-2xl shadow-2xl p-8 w-full max-w-lg">
+            <!-- ヘッダー -->
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-light text-gray-900 mb-2">新規登録</h2>
+                <p class="text-gray-600">香りの記憶を始めましょう</p>
+            </div>
+
+            <!-- ステップインジケーター -->
+            <div class="mb-8">
+                <div class="flex items-center justify-center space-x-4">
+                    <div class="step-circle active w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold border-2 border-perfume-purple text-perfume-purple" id="step-1">
+                        1
+                    </div>
+                    <div class="w-12 h-1 bg-gray-200 rounded" id="progress-1"></div>
+                    <div class="step-circle w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold border-2 border-gray-300 text-gray-300" id="step-2">
+                        2
+                    </div>
+                    <div class="w-12 h-1 bg-gray-200 rounded" id="progress-2"></div>
+                    <div class="step-circle w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold border-2 border-gray-300 text-gray-300" id="step-3">
+                        3
+                    </div>
+                </div>
+                <div class="flex justify-between text-xs text-gray-500 mt-2">
+                    <span>基本情報</span>
+                    <span>プロフィール</span>
+                    <span>完了</span>
+                </div>
+            </div>
+
+            <!-- Step 1: 基本情報 -->
+            <div id="step-1-content" class="step-content">
+                <form id="basicInfoForm" class="space-y-6">
+                    <!-- ユーザー名 -->
+                    <div>
+                        <label for="username" class="block text-sm font-medium text-gray-700 mb-2">
+                            ユーザー名 <span class="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            required
+                            class="form-focus w-full px-4 py-3 border border-gray-300 rounded-lg transition-all duration-200"
+                            placeholder="3-20文字で入力してください"
+                            minlength="3"
+                            maxlength="20"
+                        >
+                        <div class="text-red-500 text-sm mt-1 hidden" id="username-error">
+                            ユーザー名は3-20文字で入力してください
+                        </div>
+                        <div class="text-gray-500 text-xs mt-1">
+                            プロフィールページやレビューで表示される名前です
+                        </div>
+                    </div>
+
+                    <!-- メールアドレス -->
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                            メールアドレス <span class="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            required
+                            class="form-focus w-full px-4 py-3 border border-gray-300 rounded-lg transition-all duration-200"
+                            placeholder="your@email.com"
+                        >
+                        <div class="text-red-500 text-sm mt-1 hidden" id="email-error">
+                            有効なメールアドレスを入力してください
+                        </div>
+                        <div class="text-gray-500 text-xs mt-1">
+                            ログインとパスワードリセットに使用します
+                        </div>
+                    </div>
+
+                    <!-- パスワード -->
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                            パスワード <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                required
+                                class="form-focus w-full px-4 py-3 border border-gray-300 rounded-lg transition-all duration-200 pr-12"
+                                placeholder="8文字以上で入力してください"
+                                minlength="8"
+                            >
+                            <button
+                                type="button"
+                                id="togglePassword"
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                            >
+                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <!-- パスワード強度インジケーター -->
+                        <div class="mt-2">
+                            <div class="password-strength bg-gray-200" id="password-strength"></div>
+                            <p class="text-xs text-gray-500 mt-1" id="password-strength-text">
+                                パスワード強度: 
+                                <span id="strength-level">未入力</span>
+                            </p>
+                        </div>
+                        
+                        <div class="text-red-500 text-sm mt-1 hidden" id="password-error">
+                            パスワードは8文字以上で入力してください
+                        </div>
+                        <div class="text-gray-500 text-xs mt-1">
+                            英数字と記号を含めることを推奨します
+                        </div>
+                    </div>
+
+                    <!-- パスワード確認 -->
+                    <div>
+                        <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-2">
+                            パスワード確認 <span class="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            required
+                            class="form-focus w-full px-4 py-3 border border-gray-300 rounded-lg transition-all duration-200"
+                            placeholder="同じパスワードを再入力してください"
+                        >
+                        <div class="text-red-500 text-sm mt-1 hidden" id="confirm-password-error">
+                            パスワードが一致しません
+                        </div>
+                    </div>
+
+                    <!-- 利用規約同意 -->
+                    <div>
+                        <div class="flex items-start">
+                            <input
+                                id="terms"
+                                name="terms"
+                                type="checkbox"
+                                required
+                                class="h-4 w-4 text-perfume-purple focus:ring-perfume-purple border-gray-300 rounded mt-1"
+                            >
+                            <label for="terms" class="ml-2 block text-sm text-gray-700">
+                                <a href="#" class="text-perfume-purple hover:text-perfume-gold">利用規約</a>
+                                および
+                                <a href="#" class="text-perfume-purple hover:text-perfume-gold">プライバシーポリシー</a>
+                                に同意します <span class="text-red-500">*</span>
+                            </label>
+                        </div>
+                        <div class="text-red-500 text-sm mt-1 hidden" id="terms-error">
+                            利用規約とプライバシーポリシーに同意してください
+                        </div>
+                    </div>
+
+                    <!-- 次へボタン -->
+                    <div>
+                        <button
+                            type="submit"
+                            class="w-full bg-perfume-purple text-white py-3 px-4 rounded-lg font-medium hover:bg-opacity-90 transition-all duration-200 transform hover:scale-[1.02]"
+                        >
+                            次へ（プロフィール設定）
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Step 2: プロフィール設定 -->
+            <div id="step-2-content" class="step-content hidden">
+                <form id="profileForm" class="space-y-6">
+                    <!-- プロフィール画像 -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            プロフィール画像
+                        </label>
+                        <div class="flex items-center space-x-6">
+                            <div class="w-20 h-20 bg-perfume-purple rounded-full flex items-center justify-center text-white text-2xl font-semibold" id="avatar-preview">
+                                <!-- プレビュー画像またはイニシャル -->
+                            </div>
+                            <div>
+                                <input
+                                    type="file"
+                                    id="profileImage"
+                                    name="profileImage"
+                                    accept="image/*"
+                                    class="hidden"
+                                >
+                                <button
+                                    type="button"
+                                    onclick="document.getElementById('profileImage').click()"
+                                    class="bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                                >
+                                    画像を選択
+                                </button>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    JPG、PNG、GIF（最大5MB）
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 自己紹介 -->
+                    <div>
+                        <label for="bio" class="block text-sm font-medium text-gray-700 mb-2">
+                            自己紹介
+                        </label>
+                        <textarea
+                            id="bio"
+                            name="bio"
+                            rows="4"
+                            maxlength="500"
+                            class="form-focus w-full px-4 py-3 border border-gray-300 rounded-lg transition-all duration-200 resize-none"
+                            placeholder="香水の好みや経験について教えてください（任意）"
+                        ></textarea>
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>プロフィールページに表示されます</span>
+                            <span id="bio-count">0/500</span>
+                        </div>
+                    </div>
+
+                    <!-- 香水経験レベル -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">
+                            香水経験レベル
+                        </label>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="radio" name="experience" value="beginner" class="text-perfume-purple focus:ring-perfume-purple">
+                                <span class="ml-2 text-sm">初心者 - 香水を始めたばかり</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="experience" value="intermediate" class="text-perfume-purple focus:ring-perfume-purple">
+                                <span class="ml-2 text-sm">中級者 - ある程度の知識と経験がある</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="experience" value="advanced" class="text-perfume-purple focus:ring-perfume-purple">
+                                <span class="ml-2 text-sm">上級者 - 豊富な知識と経験を持つ</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="experience" value="expert" class="text-perfume-purple focus:ring-perfume-purple">
+                                <span class="ml-2 text-sm">エキスパート - 専門的な知識を持つ</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 好きな香調 -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">
+                            好きな香調（複数選択可）
+                        </label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" name="fragrance_families" value="floral" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">フローラル</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="fragrance_families" value="woody" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">ウッディ</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="fragrance_families" value="citrus" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">シトラス</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="fragrance_families" value="oriental" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">オリエンタル</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="fragrance_families" value="fresh" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">フレッシュ</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="fragrance_families" value="gourmand" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">グルマン</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- ボタン -->
+                    <div class="flex space-x-4">
+                        <button
+                            type="button"
+                            onclick="goToStep(1)"
+                            class="flex-1 border border-gray-300 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+                        >
+                            戻る
+                        </button>
+                        <button
+                            type="submit"
+                            class="flex-1 bg-perfume-purple text-white py-3 rounded-lg font-medium hover:bg-opacity-90 transition-colors"
+                        >
+                            次へ（確認）
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Step 3: 確認・完了 -->
+            <div id="step-3-content" class="step-content hidden">
+                <div class="space-y-6">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">登録内容確認</h3>
+                        <p class="text-gray-600">以下の内容で登録します</p>
+                    </div>
+
+                    <!-- 確認内容 -->
+                    <div class="bg-gray-50 rounded-lg p-6 space-y-4" id="confirmation-details">
+                        <!-- JavaScript で動的に生成 -->
+                    </div>
+
+                    <!-- 最終確認とボタン -->
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <input
+                                id="finalConfirm"
+                                type="checkbox"
+                                required
+                                class="h-4 w-4 text-perfume-purple focus:ring-perfume-purple border-gray-300 rounded mt-1"
+                            >
+                            <label for="finalConfirm" class="ml-2 block text-sm text-gray-700">
+                                上記の内容で登録することに同意します
+                            </label>
+                        </div>
+
+                        <div class="flex space-x-4">
+                            <button
+                                type="button"
+                                onclick="goToStep(2)"
+                                class="flex-1 border border-gray-300 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+                            >
+                                戻る
+                            </button>
+                            <button
+                                type="button"
+                                onclick="submitRegistration()"
+                                id="finalSubmitBtn"
+                                class="flex-1 bg-perfume-purple text-white py-3 rounded-lg font-medium hover:bg-opacity-90 transition-colors"
+                            >
+                                登録完了
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ソーシャル登録（Step 1のみ表示） -->
+            <div id="social-register" class="mt-8">
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-4 bg-white text-gray-500">または</span>
+                    </div>
+                </div>
+
+                <div class="mt-6 space-y-3">
+                    <!-- Googleで登録 -->
+                    <button
+                        type="button"
+                        onclick="registerWithGoogle()"
+                        class="social-btn w-full flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 transition-all duration-200"
+                    >
+                        <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        Googleで登録
+                    </button>
+                </div>
+            </div>
+
+            <!-- ログインリンク -->
+            <div class="mt-8 text-center">
+                <p class="text-gray-600">
+                    既にアカウントをお持ちの方は
+                    <a href="login.html" class="text-perfume-purple hover:text-perfume-gold font-medium transition-colors">
+                        ログイン
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        let currentStep = 1;
+        let registrationData = {};
+
+        // ステップ管理
+        function goToStep(step) {
+            // 現在のステップを非表示
+            document.getElementById(`step-${currentStep}-content`).classList.add('hidden');
+            
+            // ソーシャル登録セクションの表示/非表示
+            const socialRegister = document.getElementById('social-register');
+            if (step === 1) {
+                socialRegister.classList.remove('hidden');
+            } else {
+                socialRegister.classList.add('hidden');
+            }
+            
+            // 新しいステップを表示
+            document.getElementById(`step-${step}-content`).classList.remove('hidden');
+            
+            // ステップインジケーター更新
+            updateStepIndicator(step);
+            
+            currentStep = step;
+        }
+
+        function updateStepIndicator(step) {
+            for (let i = 1; i <= 3; i++) {
+                const stepCircle = document.getElementById(`step-${i}`);
+                const progress = document.getElementById(`progress-${i}`);
+                
+                if (i < step) {
+                    stepCircle.className = 'step-circle completed w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold';
+                    stepCircle.innerHTML = '✓';
+                    if (progress) progress.className = 'w-12 h-1 bg-green-500 rounded';
+                } else if (i === step) {
+                    stepCircle.className = 'step-circle active w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold';
+                    stepCircle.innerHTML = i;
+                    if (progress) progress.className = 'w-12 h-1 bg-gray-200 rounded';
+                } else {
+                    stepCircle.className = 'step-circle w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold border-2 border-gray-300 text-gray-300';
+                    stepCircle.innerHTML = i;
+                    if (progress) progress.className = 'w-12 h-1 bg-gray-200 rounded';
+                }
+            }
+        }
+
+        // Step 1: 基本情報フォーム
+        document.getElementById('basicInfoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (validateBasicInfo()) {
+                // データ保存
+                registrationData.username = document.getElementById('username').value;
+                registrationData.email = document.getElementById('email').value;
+                registrationData.password = document.getElementById('password').value;
+                
+                // Step 2に進む
+                goToStep(2);
+                
+                // プロフィール画像プレビュー初期化
+                updateAvatarPreview();
+            }
+        });
+
+        // Step 2: プロフィールフォーム
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // データ保存
+            registrationData.bio = document.getElementById('bio').value;
+            registrationData.experience = document.querySelector('input[name="experience"]:checked')?.value || '';
+            registrationData.fragranceFamilies = Array.from(document.querySelectorAll('input[name="fragrance_families"]:checked')).map(cb => cb.value);
+            
+            // 確認画面データ生成
+            generateConfirmationData();
+            
+            // Step 3に進む
+            goToStep(3);
+        });
+
+        // バリデーション
+        function validateBasicInfo() {
+            let isValid = true;
+            
+            // ユーザー名
+            const username = document.getElementById('username').value;
+            if (username.length < 3 || username.length > 20) {
+                showError('username-error');
+                isValid = false;
+            } else {
+                hideError('username-error');
+            }
+            
+            // メールアドレス
+            const email = document.getElementById('email').value;
+            if (!isValidEmail(email)) {
+                showError('email-error');
+                isValid = false;
+            } else {
+                hideError('email-error');
+            }
+            
+            // パスワード
+            const password = document.getElementById('password').value;
+            if (password.length < 8) {
+                showError('password-error');
+                isValid = false;
+            } else {
+                hideError('password-error');
+            }
+            
+            // パスワード確認
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            if (password !== confirmPassword) {
+                showError('confirm-password-error');
+                isValid = false;
+            } else {
+                hideError('confirm-password-error');
+            }
+            
+            // 利用規約
+            if (!document.getElementById('terms').checked) {
+                showError('terms-error');
+                isValid = false;
+            } else {
+                hideError('terms-error');
+            }
+            
+            return isValid;
+        }
+
+        function isValidEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function showError(elementId) {
+            document.getElementById(elementId).classList.remove('hidden');
+        }
+
+        function hideError(elementId) {
+            document.getElementById(elementId).classList.add('hidden');
+        }
+
+        // パスワード強度チェック
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            const strength = calculatePasswordStrength(password);
+            updatePasswordStrengthUI(strength);
+        });
+
+        function calculatePasswordStrength(password) {
+            let score = 0;
+            
+            if (password.length >= 8) score++;
+            if (password.length >= 12) score++;
+            if (/[a-z]/.test(password)) score++;
+            if (/[A-Z]/.test(password)) score++;
+            if (/[0-9]/.test(password)) score++;
+            if (/[^A-Za-z0-9]/.test(password)) score++;
+            
+            return score;
+        }
+
+        function updatePasswordStrengthUI(strength) {
+            const strengthElement = document.getElementById('password-strength');
+            const strengthText = document.getElementById('strength-level');
+            
+            if (strength <= 2) {
+                strengthElement.className = 'password-strength strength-weak';
+                strengthText.textContent = '弱い';
+                strengthText.className = 'text-red-500';
+            } else if (strength <= 3) {
+                strengthElement.className = 'password-strength strength-fair';
+                strengthText.textContent = '普通';
+                strengthText.className = 'text-yellow-500';
+            } else if (strength <= 4) {
+                strengthElement.className = 'password-strength strength-good';
+                strengthText.textContent = '良い';
+                strengthText.className = 'text-green-500';
+            } else {
+                strengthElement.className = 'password-strength strength-strong';
+                strengthText.textContent = '強い';
+                strengthText.className = 'text-green-600';
+            }
+        }
+
+        // パスワード表示切り替え
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            const icon = this.querySelector('svg');
+            if (type === 'text') {
+                icon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"></path>
+                `;
+            } else {
+                icon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                `;
+            }
+        });
+
+        // プロフィール画像プレビュー
+        document.getElementById('profileImage').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('avatar-preview');
+                    preview.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover rounded-full">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function updateAvatarPreview() {
+            const username = registrationData.username || '';
+            const initial = username.charAt(0).toUpperCase() || '?';
+            document.getElementById('avatar-preview').textContent = initial;
+        }
+
+        // 自己紹介文字数カウント
+        document.getElementById('bio').addEventListener('input', function() {
+            const count = this.value.length;
+            document.getElementById('bio-count').textContent = `${count}/500`;
+        });
+
+        // 確認画面データ生成
+        function generateConfirmationData() {
+            const confirmationDetails = document.getElementById('confirmation-details');
+            
+            const experienceLabels = {
+                'beginner': '初心者',
+                'intermediate': '中級者',
+                'advanced': '上級者',
+                'expert': 'エキスパート'
+            };
+            
+            const fragranceLabels = {
+                'floral': 'フローラル',
+                'woody': 'ウッディ',
+                'citrus': 'シトラス',
+                'oriental': 'オリエンタル',
+                'fresh': 'フレッシュ',
+                'gourmand': 'グルマン'
+            };
+            
+            confirmationDetails.innerHTML = `
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <h4 class="font-medium text-gray-900 mb-2">基本情報</h4>
+                        <dl class="space-y-1 text-sm">
+                            <div class="flex justify-between">
+                                <dt class="text-gray-600">ユーザー名:</dt>
+                                <dd class="font-medium">${registrationData.username}</dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-gray-600">メール:</dt>
+                                <dd class="font-medium">${registrationData.email}</dd>
+                            </div>
+                        </dl>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-gray-900 mb-2">プロフィール</h4>
+                        <dl class="space-y-1 text-sm">
+                            <div class="flex justify-between">
+                                <dt class="text-gray-600">経験レベル:</dt>
+                                <dd class="font-medium">${experienceLabels[registrationData.experience] || '未設定'}</dd>
+                            </div>
+                            <div>
+                                <dt class="text-gray-600 mb-1">好きな香調:</dt>
+                                <dd class="font-medium text-xs">
+                                    ${registrationData.fragranceFamilies.length > 0 
+                                        ? registrationData.fragranceFamilies.map(f => fragranceLabels[f]).join(', ')
+                                        : '未設定'
+                                    }
+                                </dd>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
+                ${registrationData.bio ? `
+                <div class="mt-4 pt-4 border-t border-gray-200">
+                    <h4 class="font-medium text-gray-900 mb-2">自己紹介</h4>
+                    <p class="text-sm text-gray-700">${registrationData.bio}</p>
+                </div>
+                ` : ''}
+            `;
+        }
+
+        // 最終登録処理
+        function submitRegistration() {
+            const finalConfirm = document.getElementById('finalConfirm');
+            if (!finalConfirm.checked) {
+                alert('登録内容に同意してください。');
+                return;
+            }
+            
+            const submitBtn = document.getElementById('finalSubmitBtn');
+            submitBtn.textContent = '登録中...';
+            submitBtn.disabled = true;
+            
+            // デモ用：実際の実装ではAPI呼び出し
+            setTimeout(() => {
+                alert(`${registrationData.username}さん、登録完了しました！\nログインページに移動します。`);
+                window.location.href = 'login.html';
+            }, 2000);
+        }
+
+        // ソーシャル登録
+        function registerWithGoogle() {
+            alert('Googleアカウントでの登録機能は開発中です。\nPhase 2で実装予定です。');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memscent - あなたの香りの旅を始めよう</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        perfume: {
+                            purple: '#8B4B7C',
+                            gold: '#D4A574',
+                            blue: '#A8C8E1',
+                            base: '#FAFAFA'
+                        }
+                    },
+                    fontFamily: {
+                        'noto': ['Noto Sans JP', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; }
+        .hero-gradient { background: linear-gradient(135deg, rgba(139, 75, 124, 0.9) 0%, rgba(212, 165, 116, 0.8) 100%); }
+        .perfume-card { transition: all 0.3s ease; }
+        .perfume-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+        .star-filled { color: #D4A574; }
+        .star-empty { color: #E5E5E5; }
+        
+        /* レスポンシブ改善 */
+        @media (max-width: 1024px) {
+            .max-w-7xl {
+                max-width: 100%;
+            }
+            header nav {
+                display: none !important;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            /* ヘッダーの調整 */
+            header .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            
+            /* 検索バーを非表示に */
+            .search-bar {
+                display: none !important;
+            }
+            
+            /* ロゴのサイズ調整 */
+            header h1 {
+                font-size: 1.5rem;
+            }
+            
+            /* ボタンのサイズ調整 */
+            header .space-x-4 {
+                gap: 0.5rem;
+            }
+            
+            /* Heroセクションの文字サイズ調整 */
+            .hero-title {
+                font-size: 2.5rem;
+                line-height: 1.2;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            
+            /* 香水カードのグリッド調整 */
+            .perfume-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            /* さらに小さい画面での調整 */
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                gap: 1rem;
+                width: 100%;
+            }
+            
+            .hero-buttons > * {
+                width: 100%;
+                text-align: center;
+            }
+            
+            /* パディングの調整 */
+            .section-padding {
+                padding: 3rem 1rem;
+            }
+            
+            /* フッターの調整 */
+            footer .grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            /* ユーザーメニューの調整 */
+            #user-menu .hidden.sm\\:block {
+                display: none !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            /* 極小画面での調整 */
+            header {
+                padding: 0.5rem 0;
+            }
+            
+            .hero-title {
+                font-size: 1.8rem;
+            }
+            
+            .perfume-card {
+                margin: 0 0.5rem;
+            }
+            
+            /* ボタンのパディング調整 */
+            .btn-primary {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- ヘッダー -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between py-4">
+                <!-- ロゴ -->
+                <div class="flex items-center flex-shrink-0">
+                    <h1 class="text-2xl font-bold text-perfume-purple font-serif">Memscent</h1>
+                    <span class="ml-2 text-sm text-gray-500 hidden lg:block">あなたの香りの記憶</span>
+                </div>
+                
+                <!-- ナビゲーション（デスクトップ） -->
+                <nav class="hidden lg:flex items-center space-x-6 mx-8">
+                    <a href="#" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors whitespace-nowrap">ホーム</a>
+                    <a href="search-results.html" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors whitespace-nowrap">香水を探す</a>
+                    <a href="#" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors whitespace-nowrap">レビュー</a>
+                    <a href="#" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors whitespace-nowrap">ランキング</a>
+                    <a href="#" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors whitespace-nowrap">コミュニティ</a>
+                </nav>
+                
+                <!-- 右側メニュー -->
+                <div class="flex items-center space-x-4 flex-shrink-0">
+                    <!-- 検索バー -->
+                    <div class="search-bar hidden md:flex items-center bg-gray-100 rounded-full px-4 py-2 w-64 lg:w-64 xl:w-80">
+                        <svg class="w-5 h-5 text-gray-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <form onsubmit="searchPerfumes(event)" class="flex-1">
+                            <input type="text" id="headerSearchInput" placeholder="香水名、ブランド、香調で検索..." class="bg-transparent w-full outline-none text-sm">
+                        </form>
+                    </div>
+                    
+                    <!-- お気に入りボタン -->
+                    <button class="p-2 text-gray-600 hover:text-perfume-purple transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                        </svg>
+                    </button>
+                    
+                    <!-- 未ログイン時のボタン -->
+                    <div id="guest-menu" class="flex items-center space-x-3">
+                        <a href="login.html" class="text-gray-600 hover:text-perfume-purple font-medium transition-colors whitespace-nowrap">
+                            ログイン
+                        </a>
+                        <a href="register.html" class="bg-perfume-purple text-white px-4 py-2 rounded-full font-medium hover:bg-opacity-90 transition-all whitespace-nowrap">
+                            新規登録
+                    </div>
+                    
+                    <!-- ユーザープロフィール（ログイン済み状態）-->
+                    <div id="user-menu" class="relative group hidden">
+                        <button class="flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-full text-sm font-medium transition-colors">
+                            <div class="w-6 h-6 bg-perfume-purple rounded-full flex items-center justify-center text-white text-xs">
+                                香
+                            </div>
+                            <span class="hidden sm:block">香子さん</span>
+                            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        
+                        <!-- ドロップダウンメニュー -->
+                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <div class="py-2">
+                                <a href="user-profile.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                    マイプロフィール
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                    </svg>
+                                    お気に入り
+                                </a>
+                                <a href="perfume-register.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                    </svg>
+                                    香水を登録
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                    設定
+                                </a>
+                                <hr class="my-1">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                    </svg>
+                                    ログアウト
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- モバイルメニューボタン -->
+                    <button class="lg:hidden p-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Heroセクション -->
+    <section class="relative min-h-[500px] flex items-center justify-center hero-gradient">
+        <div class="absolute inset-0 bg-black opacity-20"></div>
+        <div class="relative z-10 text-center text-white px-4 sm:px-6 lg:px-8">
+            <h2 class="hero-title text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
+                あなたの香りの旅を<br class="hidden sm:block">始めよう
+            </h2>
+            <p class="hero-subtitle text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 opacity-90 max-w-2xl mx-auto leading-relaxed">
+                30,000以上の香水レビューから、あなただけの特別な香りを見つけてください。
+            </p>
+            <div class="hero-buttons flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center max-w-md sm:max-w-none mx-auto">
+                <a href="register.html" class="btn-primary bg-perfume-gold hover:bg-opacity-90 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full text-base sm:text-lg font-semibold transition-all transform hover:scale-105 shadow-lg w-full sm:w-auto">
+                    会員登録（無料）
+                </a>
+                <a href="search-results.html" class="border-2 border-white text-white hover:bg-white hover:text-perfume-purple px-6 sm:px-8 py-3 sm:py-4 rounded-full text-base sm:text-lg font-semibold transition-all w-full sm:w-auto">
+                    香水を探す
+                </a>
+            </div>
+            
+            <!-- 三越伊勢丹アフィリエイト -->
+            <div class="mt-8 p-4 bg-white bg-opacity-10 rounded-lg inline-block">
+                <p class="text-sm opacity-80 mb-2">✨ 注目の香水</p>
+                <a href="#" class="text-perfume-gold hover:underline font-medium">三越伊勢丹でお得に購入 →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 人気香水セクション -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-gray-900 mb-4">人気の香水</h3>
+                <p class="text-gray-600 text-lg">高評価レビューが多い香水をご紹介</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- 香水カード 1 -->
+                <div class="perfume-card bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="relative">
+                        <div class="h-48 bg-gradient-to-br from-pink-100 to-purple-100 flex items-center justify-center overflow-hidden">
+                            <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                                <span class="text-gray-500 text-sm">イメージ画像</span>
+                            </div>
+                        </div>
+                        <button class="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:bg-gray-50">
+                            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-semibold text-gray-900 mb-1 truncate">ミス ディオール</h4>
+                        <p class="text-sm text-gray-600 mb-2">Christian Dior</p>
+                        <div class="flex items-center mb-2">
+                            <div class="flex text-sm">
+                                <span class="star-filled">★★★★☆</span>
+                            </div>
+                            <span class="ml-1 text-xs text-gray-500">4.2 (324件)</span>
+                        </div>
+                        <p class="font-semibold text-perfume-purple">¥12,800</p>
+                        <a href="perfume-detail.html" class="block w-full mt-3 bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 rounded-lg text-sm font-medium transition-colors text-center">
+                            詳細を見る
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 香水カード 2 -->
+                <div class="perfume-card bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="relative">
+                        <div class="h-48 bg-gradient-to-br from-blue-100 to-cyan-100 flex items-center justify-center overflow-hidden">
+                            <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                                <span class="text-gray-500 text-sm">イメージ画像</span>
+                            </div>
+                        </div>
+                        <button class="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:bg-gray-50">
+                            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-semibold text-gray-900 mb-1 truncate">アクア デ ジオ</h4>
+                        <p class="text-sm text-gray-600 mb-2">Giorgio Armani</p>
+                        <div class="flex items-center mb-2">
+                            <div class="flex text-sm">
+                                <span class="star-filled">★★★★★</span>
+                            </div>
+                            <span class="ml-1 text-xs text-gray-500">4.6 (198件)</span>
+                        </div>
+                        <p class="font-semibold text-perfume-purple">¥8,900</p>
+                        <button class="w-full mt-3 bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 rounded-lg text-sm font-medium transition-colors">
+                            詳細を見る
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 香水カード 3 -->
+                <div class="perfume-card bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="relative">
+                        <div class="h-48 bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center overflow-hidden">
+                            <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                                <span class="text-gray-500 text-sm">イメージ画像</span>
+                            </div>
+                        </div>
+                        <button class="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:bg-gray-50">
+                            <svg class="w-5 h-5 text-red-500 fill-current" viewBox="0 0 24 24">
+                                <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-semibold text-gray-900 mb-1 truncate">シャネル No.5</h4>
+                        <p class="text-sm text-gray-600 mb-2">CHANEL</p>
+                        <div class="flex items-center mb-2">
+                            <div class="flex text-sm">
+                                <span class="star-filled">★★★★☆</span>
+                            </div>
+                            <span class="ml-1 text-xs text-gray-500">4.4 (567件)</span>
+                        </div>
+                        <p class="font-semibold text-perfume-purple">¥15,600</p>
+                        <button class="w-full mt-3 bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 rounded-lg text-sm font-medium transition-colors">
+                            詳細を見る
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 香水カード 4 -->
+                <div class="perfume-card bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="relative">
+                        <div class="h-48 bg-gradient-to-br from-green-100 to-teal-100 flex items-center justify-center overflow-hidden">
+                            <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                                <span class="text-gray-500 text-sm">イメージ画像</span>
+                            </div>
+                        </div>
+                        <button class="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:bg-gray-50">
+                            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-semibold text-gray-900 mb-1 truncate">ライト ブルー</h4>
+                        <p class="text-sm text-gray-600 mb-2">Dolce & Gabbana</p>
+                        <div class="flex items-center mb-2">
+                            <div class="flex text-sm">
+                                <span class="star-filled">★★★★☆</span>
+                            </div>
+                            <span class="ml-1 text-xs text-gray-500">4.1 (156件)</span>
+                        </div>
+                        <p class="font-semibold text-perfume-purple">¥11,200</p>
+                        <button class="w-full mt-3 bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 rounded-lg text-sm font-medium transition-colors">
+                            詳細を見る
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-12">
+                <button class="border-2 border-perfume-purple text-perfume-purple hover:bg-perfume-purple hover:text-white px-8 py-3 rounded-full font-semibold transition-all">
+                    すべての人気香水を見る
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 最新レビューセクション -->
+    <section class="section-padding py-12 sm:py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-8 sm:mb-12">
+                <h3 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">最新レビュー</h3>
+                <p class="text-gray-600 text-base sm:text-lg">コミュニティメンバーの新しい発見</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                <!-- レビューカード 1 -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-perfume-purple rounded-full flex items-center justify-center text-white font-semibold">
+                            香
+                        </div>
+                        <div class="ml-3">
+                            <p class="font-semibold text-gray-900">香子さん</p>
+                            <p class="text-sm text-gray-500">2時間前</p>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="flex text-sm mb-1">
+                            <span class="star-filled">★★★★★</span>
+                        </div>
+                        <h4 class="font-semibold text-gray-900">ジョー マローン ピオニー & ブラッシュ スエード</h4>
+                    </div>
+                    <p class="text-gray-700 text-sm leading-relaxed">
+                        春にぴったりの上品な香りです。ピオニーの甘い香りが優しく包み込んでくれて、オフィスでも使いやすいです。持続性も程よく...
+                    </p>
+                    <button class="text-perfume-purple text-sm font-medium mt-2 hover:underline">続きを読む</button>
+                </div>
+
+                <!-- レビューカード 2 -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-perfume-gold rounded-full flex items-center justify-center text-white font-semibold">
+                            み
+                        </div>
+                        <div class="ml-3">
+                            <p class="font-semibold text-gray-900">みつこさん</p>
+                            <p class="text-sm text-gray-500">5時間前</p>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="flex text-sm mb-1">
+                            <span class="star-filled">★★★★☆</span>
+                        </div>
+                        <h4 class="font-semibold text-gray-900">トム フォード ブラック オーキッド</h4>
+                    </div>
+                    <p class="text-gray-700 text-sm leading-relaxed">
+                        濃厚で大人っぽい香り。夜のお出かけにぴったりです。少量でもしっかりと香るので、つけすぎ注意です！
+                    </p>
+                    <button class="text-perfume-purple text-sm font-medium mt-2 hover:underline">続きを読む</button>
+                </div>
+
+                <!-- レビューカード 3 -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-perfume-blue rounded-full flex items-center justify-center text-white font-semibold">
+                            ゆ
+                        </div>
+                        <div class="ml-3">
+                            <p class="font-semibold text-gray-900">ゆりさん</p>
+                            <p class="text-sm text-gray-500">1日前</p>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="flex text-sm mb-1">
+                            <span class="star-filled">★★★☆☆</span>
+                        </div>
+                        <h4 class="font-semibold text-gray-900">エルメス ナイルの庭</h4>
+                    </div>
+                    <p class="text-gray-700 text-sm leading-relaxed">
+                        グリーン系でフレッシュな香り。夏向きですが、私にはちょっと薄く感じました。もう少し持続してくれると嬉しいです。
+                    </p>
+                    <button class="text-perfume-purple text-sm font-medium mt-2 hover:underline">続きを読む</button>
+                </div>
+            </div>
+
+            <div class="text-center mt-12">
+                <button class="border-2 border-perfume-purple text-perfume-purple hover:bg-perfume-purple hover:text-white px-8 py-3 rounded-full font-semibold transition-all">
+                    すべてのレビューを見る
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 機能紹介セクション -->
+    <section class="section-padding py-12 sm:py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-8 sm:mb-12">
+                <h3 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">Memscentの特徴</h3>
+                <p class="text-gray-600 text-base sm:text-lg">あなたの香水ライフをもっと楽しく</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+                <!-- 機能1 -->
+                <div class="text-center">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-perfume-purple bg-opacity-10 rounded-full mb-4">
+                        <div class="text-2xl">📊</div>
+                    </div>
+                    <h4 class="text-xl font-semibold text-gray-900 mb-3">詳細な評価システム</h4>
+                    <p class="text-gray-600">
+                        香り・持続性・拡散性・コスパの4項目で詳しく評価。あなたにぴったりの香水が見つかります。
+                    </p>
+                </div>
+
+                <!-- 機能2 -->
+                <div class="text-center">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-perfume-gold bg-opacity-10 rounded-full mb-4">
+                        <div class="text-2xl">👥</div>
+                    </div>
+                    <h4 class="text-xl font-semibold text-gray-900 mb-3">活発なコミュニティ</h4>
+                    <p class="text-gray-600">
+                        香水愛好家同士で情報交換。新しい発見や使用シーンのアイデアが豊富に見つかります。
+                    </p>
+                </div>
+
+                <!-- 機能3 -->
+                <div class="text-center">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-perfume-blue bg-opacity-10 rounded-full mb-4">
+                        <div class="text-2xl">💎</div>
+                    </div>
+                    <h4 class="text-xl font-semibold text-gray-900 mb-3">パーソナライズ機能</h4>
+                    <p class="text-gray-600">
+                        あなたの好みを学習して、おすすめの香水を提案。理想の香りとの出会いをサポートします。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- フッター -->
+    <footer class="bg-gray-900 text-white py-8 sm:py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
+                <!-- 会社情報 -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Memscent</h3>
+                    <p class="text-gray-300 mb-4">
+                        あなたの香りの記憶を大切にする、香水レビューコミュニティサイトです。
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-300 hover:text-white">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.083.402-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.583-1.378 0 0-.636 2.122-.636 2.122-.23.876-.85 1.97-1.265 2.653.951.29 1.956.447 3.002.447C18.624 24.013 24.013 18.624 24.013 11.987 24.013 5.367 18.646.001 12.017.001z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- リンク1 -->
+                <div>
+                    <h4 class="font-semibold mb-4">サービス</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white">香水検索</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">レビュー投稿</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">ランキング</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">おすすめ機能</a></li>
+                    </ul>
+                </div>
+
+                <!-- リンク2 -->
+                <div>
+                    <h4 class="font-semibold mb-4">コミュニティ</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white">フォーラム</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">イベント</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">専門家コラム</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">Q&A</a></li>
+                    </ul>
+                </div>
+
+                <!-- リンク3 -->
+                <div>
+                    <h4 class="font-semibold mb-4">サポート</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white">ヘルプセンター</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">お問い合わせ</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">プライバシーポリシー</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">利用規約</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+                <p class="text-gray-300">&copy; 2025 Memscent. All rights reserved. あなたの香りの記憶を大切に。</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 検索機能
+        function searchPerfumes(event) {
+            event.preventDefault();
+            const searchTerm = document.getElementById('headerSearchInput').value.trim();
+            if (searchTerm) {
+                window.location.href = `search-results.html?q=${encodeURIComponent(searchTerm)}`;
+            } else {
+                window.location.href = 'search-results.html';
+            }
+        }
+
+        // 簡単なインタラクション
+        document.addEventListener('DOMContentLoaded', function() {
+            // スムーススクロール
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // 香水カードのホバーエフェクト
+            document.querySelectorAll('.perfume-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

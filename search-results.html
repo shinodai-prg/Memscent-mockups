@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>検索結果 | Memscent</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        perfume: {
+                            purple: '#8B4B7C',
+                            gold: '#D4A574',
+                            blue: '#A8C8E1',
+                            base: '#FAFAFA'
+                        }
+                    },
+                    fontFamily: {
+                        'noto': ['Noto Sans JP', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; }
+        .perfume-card { 
+            transition: all 0.3s ease; 
+            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.95) 100%);
+            backdrop-filter: blur(10px);
+        }
+        .perfume-card:hover { 
+            transform: translateY(-4px); 
+            box-shadow: 0 20px 40px rgba(139, 75, 124, 0.15);
+        }
+        .star-filled { color: #D4A574; }
+        .star-empty { color: #E5E5E5; }
+        .filter-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+        }
+        .search-highlight {
+            background: linear-gradient(120deg, rgba(212, 165, 116, 0.3) 0%, rgba(139, 75, 124, 0.2) 100%);
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        .price-range {
+            background: linear-gradient(90deg, #8B4B7C 0%, #D4A574 100%);
+            height: 4px;
+            border-radius: 2px;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, rgba(139, 75, 124, 0.05) 0%, rgba(212, 165, 116, 0.08) 50%, rgba(168, 200, 225, 0.05) 100%);
+        }
+        
+        /* リスト表示用スタイル */
+        .list-item {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(139, 75, 124, 0.1);
+        }
+        
+        .list-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 75, 124, 0.15);
+        }
+        
+        .list-item-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            flex-shrink: 0;
+            margin-right: 1rem;
+        }
+        
+        .list-item-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .list-item-actions {
+            margin-left: 1rem;
+            flex-shrink: 0;
+        }
+        
+        /* レスポンシブ対応 */
+        @media (max-width: 640px) {
+            .list-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .list-item-image {
+                width: 100%;
+                height: 200px;
+                margin-right: 0;
+                margin-bottom: 0.5rem;
+            }
+            
+            .list-item-content {
+                width: 100%;
+            }
+            
+            .list-item-actions {
+                width: 100%;
+                margin-left: 0;
+                margin-top: 0.5rem;
+            }
+            
+            /* フィルターパネルの調整 */
+            .filter-panel {
+                border-radius: 0.75rem;
+                padding: 1rem;
+            }
+            
+            /* グリッド表示の調整 */
+            .perfume-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            /* 検索バーの調整 */
+            .search-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .search-input {
+                width: 100%;
+            }
+            
+            .sort-select {
+                width: 100%;
+            }
+            
+            /* ヘッダーの調整 */
+            header nav {
+                display: none !important;
+            }
+            
+            header .search-bar {
+                display: none !important;
+            }
+            
+            header h1 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            /* さらに小さい画面での調整 */
+            .perfume-card {
+                margin: 0;
+                border-radius: 0.75rem;
+            }
+            
+            .filter-panel {
+                margin: 0.5rem;
+                padding: 0.75rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .results-count {
+                font-size: 0.875rem;
+            }
+        }
+    </style>
+                width: 60px;
+                height: 60px;
+                margin-right: 0;
+                margin-bottom: 0.75rem;
+                align-self: center;
+            }
+            
+            .list-item-content {
+                margin-bottom: 0.75rem;
+                width: 100%;
+            }
+            
+            .list-item-actions {
+                margin-left: 0;
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .list-item-actions button {
+                flex: 1;
+                margin-left: 0.5rem;
+            }
+        }
+        
+        @media (min-width: 641px) and (max-width: 768px) {
+            .list-item-image {
+                width: 70px;
+                height: 70px;
+            }
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- ヘッダー -->
+    <header class="bg-white bg-opacity-90 backdrop-blur-lg shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between py-4">
+                <!-- ロゴ -->
+                <div class="flex items-center flex-shrink-0">
+                    <a href="index.html" class="flex items-center">
+                        <h1 class="text-2xl font-semibold text-perfume-purple font-serif" style="letter-spacing: -0.01em;">Memscent</h1>
+                        <span class="ml-2 text-sm text-gray-500 hidden lg:block font-light">あなたの香りの記憶</span>
+                    </a>
+                </div>
+                
+                <!-- ナビゲーション（デスクトップ） -->
+                <nav class="hidden lg:flex items-center space-x-6 mx-8">
+                    <a href="index.html" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors whitespace-nowrap">ホーム</a>
+                    <a href="search-results.html" class="text-perfume-purple font-medium transition-colors whitespace-nowrap">香水を探す</a>
+                    <a href="#" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors whitespace-nowrap">レビュー</a>
+                    <a href="#" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors whitespace-nowrap">ランキング</a>
+                    <a href="#" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors whitespace-nowrap">コミュニティ</a>
+                </nav>
+                
+                <!-- 右側メニュー -->
+                <div class="flex items-center space-x-4 flex-shrink-0">
+                    <!-- 検索バー -->
+                    <div class="flex items-center bg-gray-100 rounded-full px-4 py-2 w-64">
+                        <svg class="h-5 w-5 text-gray-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <form onsubmit="searchPerfumes(event)" class="flex-1">
+                            <input 
+                                type="text" 
+                                id="searchInput"
+                                placeholder="香水名、ブランド、香調で検索..." 
+                                value="フローラル"
+                                class="bg-transparent w-full outline-none text-sm"
+                            >
+                        </form>
+                    </div>
+                    
+                    <!-- ナビゲーション -->
+                    <div class="flex items-center space-x-4">
+                        <a href="login.html" class="text-gray-600 hover:text-perfume-purple font-medium transition-colors whitespace-nowrap">
+                            ログイン
+                        </a>
+                        <a href="register.html" class="bg-perfume-purple text-white px-4 py-2 rounded-full font-medium hover:bg-opacity-90 transition-all whitespace-nowrap">
+                            新規登録
+                        </a>
+                    </div>
+                    
+                    <!-- モバイルメニューボタン -->
+                    <button class="lg:hidden p-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- 検索結果ヘッダー -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between flex-wrap gap-4">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900 mb-2">
+                        「<span class="search-highlight">フローラル</span>」の検索結果
+                    </h1>
+                    <p class="text-gray-600">
+                        <span class="font-semibold text-perfume-purple" id="resultCount">248</span>件の香水が見つかりました
+                    </p>
+                </div>
+                
+                <!-- ソート -->
+                <div class="flex items-center space-x-4">
+                    <label class="text-sm font-medium text-gray-700">並び順:</label>
+                    <select id="sortSelect" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-perfume-purple">
+                        <option value="relevance">関連度順</option>
+                        <option value="rating">評価順</option>
+                        <option value="price_asc">価格安い順</option>
+                        <option value="price_desc">価格高い順</option>
+                        <option value="newest">新着順</option>
+                        <option value="popular">人気順</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex gap-8">
+            <!-- フィルターサイドバー -->
+            <aside class="w-80 flex-shrink-0">
+                <div class="filter-panel sticky top-24 rounded-xl shadow-lg p-6 border border-gray-200">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-6 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-perfume-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+                        </svg>
+                        絞り込み
+                    </h2>
+
+                    <!-- 価格帯 -->
+                    <div class="mb-6">
+                        <h3 class="font-medium text-gray-900 mb-3">価格帯</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">～5,000円</span>
+                                <span class="ml-auto text-xs text-gray-500">(42)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded" checked>
+                                <span class="ml-2 text-sm">5,000円～10,000円</span>
+                                <span class="ml-auto text-xs text-gray-500">(89)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">10,000円～20,000円</span>
+                                <span class="ml-auto text-xs text-gray-500">(76)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">20,000円～</span>
+                                <span class="ml-auto text-xs text-gray-500">(41)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- ブランド -->
+                    <div class="mb-6">
+                        <h3 class="font-medium text-gray-900 mb-3">ブランド</h3>
+                        <div class="space-y-2 max-h-48 overflow-y-auto">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded" checked>
+                                <span class="ml-2 text-sm">Dior</span>
+                                <span class="ml-auto text-xs text-gray-500">(23)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">Chanel</span>
+                                <span class="ml-auto text-xs text-gray-500">(18)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">Jo Malone</span>
+                                <span class="ml-auto text-xs text-gray-500">(15)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">Tom Ford</span>
+                                <span class="ml-auto text-xs text-gray-500">(12)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">Hermès</span>
+                                <span class="ml-auto text-xs text-gray-500">(10)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">Gucci</span>
+                                <span class="ml-auto text-xs text-gray-500">(9)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">Maison Margiela</span>
+                                <span class="ml-auto text-xs text-gray-500">(8)</span>
+                            </label>
+                        </div>
+                        <button class="text-perfume-purple text-sm hover:text-perfume-gold transition-colors mt-2">
+                            もっと見る
+                        </button>
+                    </div>
+
+                    <!-- 香調 -->
+                    <div class="mb-6">
+                        <h3 class="font-medium text-gray-900 mb-3">香調</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded" checked>
+                                <span class="ml-2 text-sm">フローラル</span>
+                                <span class="ml-auto text-xs text-gray-500">(156)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">フルーティ</span>
+                                <span class="ml-auto text-xs text-gray-500">(92)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">ウッディ</span>
+                                <span class="ml-auto text-xs text-gray-500">(78)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">シトラス</span>
+                                <span class="ml-auto text-xs text-gray-500">(64)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">オリエンタル</span>
+                                <span class="ml-auto text-xs text-gray-500">(45)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 調香師 (S002機能強化) -->
+                    <div class="mb-6">
+                        <h3 class="font-medium text-gray-900 mb-3">調香師</h3>
+                        <div class="space-y-2 max-h-48 overflow-y-auto">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">フランソワ・ドゥマシー</span>
+                                <span class="ml-auto text-xs text-gray-500">(12)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">オリヴィエ・ポルジュ</span>
+                                <span class="ml-auto text-xs text-gray-500">(9)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">ジャック・キャヴァリエ</span>
+                                <span class="ml-auto text-xs text-gray-500">(7)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">ドミニク・ロピオン</span>
+                                <span class="ml-auto text-xs text-gray-500">(6)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">アンヌ・フリポ</span>
+                                <span class="ml-auto text-xs text-gray-500">(5)</span>
+                            </label>
+                        </div>
+                        <button class="text-perfume-purple text-sm hover:text-perfume-gold transition-colors mt-2">
+                            もっと見る
+                        </button>
+                    </div>
+
+                    <!-- 基本分類 (P005連携) -->
+                    <div class="mb-6">
+                        <h3 class="font-medium text-gray-900 mb-3">対象性別</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">👤 女性向け</span>
+                                <span class="ml-auto text-xs text-gray-500">(142)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">👨 男性向け</span>
+                                <span class="ml-auto text-xs text-gray-500">(78)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded" checked>
+                                <span class="ml-2 text-sm">🤝 ユニセックス</span>
+                                <span class="ml-auto text-xs text-gray-500">(28)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 適用季節 -->
+                    <div class="mb-6">
+                        <h3 class="font-medium text-gray-900 mb-3">適用季節</h3>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded" checked>
+                                <span class="ml-2 text-sm">🌸 春</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded" checked>
+                                <span class="ml-2 text-sm">☀️ 夏</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">🍂 秋</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">❄️ 冬</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 適用時間帯 -->
+                    <div class="mb-6">
+                        <h3 class="font-medium text-gray-900 mb-3">適用時間帯</h3>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded" checked>
+                                <span class="ml-2 text-sm">🌅 朝</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded" checked>
+                                <span class="ml-2 text-sm">☀️ 昼</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">🌆 夕方</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">🌙 夜</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 評価 -->
+                    <div class="mb-6">
+                        <h3 class="font-medium text-gray-900 mb-3">評価</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <div class="ml-2 flex items-center">
+                                    <div class="flex">
+                                        <span class="star-filled">★★★★★</span>
+                                    </div>
+                                    <span class="ml-2 text-sm">5.0</span>
+                                </div>
+                                <span class="ml-auto text-xs text-gray-500">(12)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded" checked>
+                                <div class="ml-2 flex items-center">
+                                    <div class="flex">
+                                        <span class="star-filled">★★★★</span><span class="star-empty">★</span>
+                                    </div>
+                                    <span class="ml-2 text-sm">4.0以上</span>
+                                </div>
+                                <span class="ml-auto text-xs text-gray-500">(89)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <div class="ml-2 flex items-center">
+                                    <div class="flex">
+                                        <span class="star-filled">★★★</span><span class="star-empty">★★</span>
+                                    </div>
+                                    <span class="ml-2 text-sm">3.0以上</span>
+                                </div>
+                                <span class="ml-auto text-xs text-gray-500">(147)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 容量 -->
+                    <div class="mb-6">
+                        <h3 class="font-medium text-gray-900 mb-3">容量</h3>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">30ml以下</span>
+                                <span class="ml-auto text-xs text-gray-500">(34)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded" checked>
+                                <span class="ml-2 text-sm">50ml</span>
+                                <span class="ml-auto text-xs text-gray-500">(128)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                <span class="ml-2 text-sm">100ml</span>
+                                <span class="ml-auto text-xs text-gray-500">(86)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- フィルタークリア -->
+                    <div class="pt-4 border-t border-gray-200">
+                        <button onclick="clearFilters()" class="w-full text-center text-perfume-purple hover:text-perfume-gold transition-colors text-sm">
+                            フィルターをクリア
+                        </button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- 検索結果 -->
+            <main class="flex-1">
+                <!-- ビュー切り替え・ソート -->
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center space-x-4">
+                        <!-- ビュー切り替え -->
+                        <div class="flex items-center space-x-2">
+                            <button id="gridView" class="p-2 text-perfume-purple bg-perfume-purple bg-opacity-10 rounded-lg">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                                </svg>
+                            </button>
+                            <button id="listView" class="p-2 text-gray-400 hover:text-perfume-purple rounded-lg">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="text-sm text-gray-500">
+                        1-24件を表示（全248件中）
+                    </div>
+                </div>
+
+                <!-- 商品グリッド -->
+                <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    <!-- 商品カード 1 -->
+                    <div class="perfume-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                        <div class="aspect-square bg-gradient-to-br from-perfume-blue to-perfume-gold rounded-lg mb-4 flex items-center justify-center">
+                            <div class="text-white text-4xl font-light">Dior</div>
+                        </div>
+                        <div class="space-y-2">
+                            <h3 class="font-semibold text-gray-900">
+                                <a href="perfume-detail.html" class="hover:text-perfume-purple transition-colors">
+                                    ミス ディオール オードゥ パルファン
+                                </a>
+                            </h3>
+                            <p class="text-sm text-gray-600">Christian Dior</p>
+                            <div class="flex items-center space-x-2">
+                                <div class="flex">
+                                    <span class="star-filled text-sm">★★★★</span>
+                                    <span class="star-empty text-sm">★</span>
+                                </div>
+                                <span class="text-sm text-gray-600">4.2</span>
+                                <span class="text-xs text-gray-500">(234)</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm bg-perfume-purple bg-opacity-10 text-perfume-purple px-2 py-1 rounded-full">フローラル</span>
+                                <span class="text-sm bg-gray-100 text-gray-600 px-2 py-1 rounded-full">フルーティ</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-perfume-purple">¥12,800</span>
+                                <span class="text-xs text-gray-500">50ml</span>
+                            </div>
+                            <button onclick="window.location.href='perfume-detail.html'" class="w-full bg-perfume-purple text-white py-2 rounded-lg hover:bg-opacity-90 transition-colors">
+                                詳細を見る
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 商品カード 2 -->
+                    <div class="perfume-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                        <div class="aspect-square bg-gradient-to-br from-perfume-purple to-perfume-gold rounded-lg mb-4 flex items-center justify-center">
+                            <div class="text-white text-4xl font-light">Chanel</div>
+                        </div>
+                        <div class="space-y-2">
+                            <h3 class="font-semibold text-gray-900">
+                                <a href="perfume-detail.html" class="hover:text-perfume-purple transition-colors">
+                                    ココ マドモアゼル オードゥ パルファン
+                                </a>
+                            </h3>
+                            <p class="text-sm text-gray-600">Chanel</p>
+                            <div class="flex items-center space-x-2">
+                                <div class="flex">
+                                    <span class="star-filled text-sm">★★★★★</span>
+                                </div>
+                                <span class="text-sm text-gray-600">4.6</span>
+                                <span class="text-xs text-gray-500">(189)</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm bg-perfume-purple bg-opacity-10 text-perfume-purple px-2 py-1 rounded-full">オリエンタル</span>
+                                <span class="text-sm bg-gray-100 text-gray-600 px-2 py-1 rounded-full">フローラル</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-perfume-purple">¥15,600</span>
+                                <span class="text-xs text-gray-500">50ml</span>
+                            </div>
+                            <button onclick="window.location.href='perfume-detail.html'" class="w-full bg-perfume-purple text-white py-2 rounded-lg hover:bg-opacity-90 transition-colors">
+                                詳細を見る
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 商品カード 3 -->
+                    <div class="perfume-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                        <div class="aspect-square bg-gradient-to-br from-perfume-gold to-perfume-blue rounded-lg mb-4 flex items-center justify-center">
+                            <div class="text-white text-3xl font-light">Jo Malone</div>
+                        </div>
+                        <div class="space-y-2">
+                            <h3 class="font-semibold text-gray-900">
+                                <a href="perfume-detail.html" class="hover:text-perfume-purple transition-colors">
+                                    ピオニー & ブラッシュ スエード
+                                </a>
+                            </h3>
+                            <p class="text-sm text-gray-600">Jo Malone London</p>
+                            <div class="flex items-center space-x-2">
+                                <div class="flex">
+                                    <span class="star-filled text-sm">★★★★</span>
+                                    <span class="star-empty text-sm">★</span>
+                                </div>
+                                <span class="text-sm text-gray-600">4.1</span>
+                                <span class="text-xs text-gray-500">(156)</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm bg-perfume-purple bg-opacity-10 text-perfume-purple px-2 py-1 rounded-full">フローラル</span>
+                                <span class="text-sm bg-gray-100 text-gray-600 px-2 py-1 rounded-full">ムスク</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-perfume-purple">¥16,500</span>
+                                <span class="text-xs text-gray-500">50ml</span>
+                            </div>
+                            <button onclick="window.location.href='perfume-detail.html'" class="w-full bg-perfume-purple text-white py-2 rounded-lg hover:bg-opacity-90 transition-colors">
+                                詳細を見る
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 商品カード 4 -->
+                    <div class="perfume-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                        <div class="aspect-square bg-gradient-to-br from-perfume-purple to-perfume-blue rounded-lg mb-4 flex items-center justify-center">
+                            <div class="text-white text-3xl font-light">TOM FORD</div>
+                        </div>
+                        <div class="space-y-2">
+                            <h3 class="font-semibold text-gray-900">
+                                <a href="perfume-detail.html" class="hover:text-perfume-purple transition-colors">
+                                    ネロリ ポルトフィーノ
+                                </a>
+                            </h3>
+                            <p class="text-sm text-gray-600">Tom Ford</p>
+                            <div class="flex items-center space-x-2">
+                                <div class="flex">
+                                    <span class="star-filled text-sm">★★★★★</span>
+                                </div>
+                                <span class="text-sm text-gray-600">4.5</span>
+                                <span class="text-xs text-gray-500">(203)</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm bg-perfume-purple bg-opacity-10 text-perfume-purple px-2 py-1 rounded-full">フローラル</span>
+                                <span class="text-sm bg-gray-100 text-gray-600 px-2 py-1 rounded-full">シトラス</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-perfume-purple">¥32,000</span>
+                                <span class="text-xs text-gray-500">50ml</span>
+                            </div>
+                            <button onclick="window.location.href='perfume-detail.html'" class="w-full bg-perfume-purple text-white py-2 rounded-lg hover:bg-opacity-90 transition-colors">
+                                詳細を見る
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 商品カード 5 -->
+                    <div class="perfume-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                        <div class="aspect-square bg-gradient-to-br from-perfume-blue to-perfume-purple rounded-lg mb-4 flex items-center justify-center">
+                            <div class="text-white text-3xl font-light">Hermès</div>
+                        </div>
+                        <div class="space-y-2">
+                            <h3 class="font-semibold text-gray-900">
+                                <a href="perfume-detail.html" class="hover:text-perfume-purple transition-colors">
+                                    ツイリー ドゥ エルメス
+                                </a>
+                            </h3>
+                            <p class="text-sm text-gray-600">Hermès</p>
+                            <div class="flex items-center space-x-2">
+                                <div class="flex">
+                                    <span class="star-filled text-sm">★★★★</span>
+                                    <span class="star-empty text-sm">★</span>
+                                </div>
+                                <span class="text-sm text-gray-600">4.3</span>
+                                <span class="text-xs text-gray-500">(167)</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm bg-perfume-purple bg-opacity-10 text-perfume-purple px-2 py-1 rounded-full">フローラル</span>
+                                <span class="text-sm bg-gray-100 text-gray-600 px-2 py-1 rounded-full">スパイシー</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-perfume-purple">¥18,700</span>
+                                <span class="text-xs text-gray-500">50ml</span>
+                            </div>
+                            <button onclick="window.location.href='perfume-detail.html'" class="w-full bg-perfume-purple text-white py-2 rounded-lg hover:bg-opacity-90 transition-colors">
+                                詳細を見る
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 商品カード 6 -->
+                    <div class="perfume-card bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                        <div class="aspect-square bg-gradient-to-br from-perfume-gold to-perfume-purple rounded-lg mb-4 flex items-center justify-center">
+                            <div class="text-white text-3xl font-light">Gucci</div>
+                        </div>
+                        <div class="space-y-2">
+                            <h3 class="font-semibold text-gray-900">
+                                <a href="perfume-detail.html" class="hover:text-perfume-purple transition-colors">
+                                    ブルーム プロフーモ ディ フィオーリ
+                                </a>
+                            </h3>
+                            <p class="text-sm text-gray-600">Gucci</p>
+                            <div class="flex items-center space-x-2">
+                                <div class="flex">
+                                    <span class="star-filled text-sm">★★★★</span>
+                                    <span class="star-empty text-sm">★</span>
+                                </div>
+                                <span class="text-sm text-gray-600">4.0</span>
+                                <span class="text-xs text-gray-500">(145)</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm bg-perfume-purple bg-opacity-10 text-perfume-purple px-2 py-1 rounded-full">フローラル</span>
+                                <span class="text-sm bg-gray-100 text-gray-600 px-2 py-1 rounded-full">ウッディ</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="font-semibold text-perfume-purple">¥14,300</span>
+                                <span class="text-xs text-gray-500">50ml</span>
+                            </div>
+                            <button onclick="window.location.href='perfume-detail.html'" class="w-full bg-perfume-purple text-white py-2 rounded-lg hover:bg-opacity-90 transition-colors">
+                                詳細を見る
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ページネーション -->
+                <div class="flex justify-center">
+                    <nav class="flex items-center space-x-2">
+                        <button class="px-3 py-2 text-sm text-gray-500 border border-gray-300 rounded-lg hover:bg-gray-50">
+                            前
+                        </button>
+                        <button class="px-3 py-2 text-sm text-white bg-perfume-purple rounded-lg">
+                            1
+                        </button>
+                        <button class="px-3 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50">
+                            2
+                        </button>
+                        <button class="px-3 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50">
+                            3
+                        </button>
+                        <span class="px-2 text-sm text-gray-500">...</span>
+                        <button class="px-3 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50">
+                            11
+                        </button>
+                        <button class="px-3 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50">
+                            次
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- 見つからない場合のセクション -->
+                <div class="bg-gradient-to-br from-purple-50 to-blue-50 border border-purple-100 rounded-xl p-6 mt-8">
+                    <div class="text-center">
+                        <div class="text-4xl mb-4">🔍</div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">お探しの香水が見つかりませんか？</h3>
+                        <p class="text-sm text-gray-600 mb-4">
+                            まだデータベースにない香水をコミュニティに追加してください
+                        </p>
+                        <a href="perfume-register.html" class="inline-flex items-center bg-perfume-purple text-white px-6 py-3 rounded-lg font-medium hover:bg-opacity-90 transition-colors">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                            新しい香水を登録
+                        </a>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // フィルター状態管理 (S003機能)
+        let currentFilters = {
+            price: [],
+            brand: [],
+            fragrance: [],
+            perfumer: [],
+            gender: [],
+            season: [],
+            timeOfDay: [],
+            rating: [],
+            volume: []
+        };
+
+        // フィルタークリア機能
+        function clearFilters() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            // フィルター状態をリセット
+            currentFilters = {
+                price: [],
+                brand: [],
+                fragrance: [],
+                perfumer: [],
+                gender: [],
+                season: [],
+                timeOfDay: [],
+                rating: [],
+                volume: []
+            };
+            
+            console.log('フィルターをクリアしました');
+            applyFilters();
+        }
+
+        // フィルター適用機能 (S003)
+        function applyFilters() {
+            const cards = document.querySelectorAll('.perfume-card');
+            let visibleCount = 0;
+            
+            cards.forEach(card => {
+                if (matchesFilters(card)) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // 検索結果件数の更新
+            document.getElementById('resultCount').textContent = visibleCount;
+            console.log(`${visibleCount}件の商品が表示されています`);
+        }
+
+        // フィルター条件チェック
+        function matchesFilters(card) {
+            // 実際の実装では、カードのデータ属性や内容に基づいてフィルタリング
+            // ここでは基本的な例として実装
+            return true; // すべてのカードを表示（デモ用）
+        }
+
+        // ソート機能 (S004)
+        function applySorting() {
+            const sortValue = document.getElementById('sortSelect').value;
+            const grid = document.getElementById('productGrid');
+            const cards = Array.from(grid.querySelectorAll('.perfume-card'));
+            
+            cards.sort((a, b) => {
+                switch (sortValue) {
+                    case 'price-asc':
+                        return getPriceFromCard(a) - getPriceFromCard(b);
+                    case 'price-desc':
+                        return getPriceFromCard(b) - getPriceFromCard(a);
+                    case 'rating-desc':
+                        return getRatingFromCard(b) - getRatingFromCard(a);
+                    case 'rating-asc':
+                        return getRatingFromCard(a) - getRatingFromCard(b);
+                    case 'name':
+                        return getNameFromCard(a).localeCompare(getNameFromCard(b));
+                    case 'newest':
+                        return getDateFromCard(b) - getDateFromCard(a);
+                    case 'reviews':
+                        return getReviewCountFromCard(b) - getReviewCountFromCard(a);
+                    default: // relevance
+                        return 0;
+                }
+            });
+            
+            // カードを再配置
+            cards.forEach(card => grid.appendChild(card));
+            console.log(`並び替え適用: ${sortValue}`);
+        }
+
+        // カードから価格を取得
+        function getPriceFromCard(card) {
+            const priceText = card.querySelector('.font-semibold.text-perfume-purple').textContent;
+            return parseInt(priceText.replace(/[¥,]/g, ''));
+        }
+
+        // カードから評価を取得
+        function getRatingFromCard(card) {
+            const ratingText = card.querySelector('.text-gray-600').textContent;
+            return parseFloat(ratingText);
+        }
+
+        // カードから名前を取得
+        function getNameFromCard(card) {
+            return card.querySelector('h3 a').textContent;
+        }
+
+        // カードから日付を取得（デモ用）
+        function getDateFromCard(card) {
+            return Math.random(); // ランダム値でデモ
+        }
+
+        // カードからレビュー数を取得
+        function getReviewCountFromCard(card) {
+            const reviewText = card.querySelector('.text-xs.text-gray-500').textContent;
+            return parseInt(reviewText.replace(/[()]/g, ''));
+        }
+
+        // ビュー切り替え機能
+        document.getElementById('gridView').addEventListener('click', function() {
+            this.classList.add('text-perfume-purple', 'bg-perfume-purple', 'bg-opacity-10');
+            this.classList.remove('text-gray-400');
+            document.getElementById('listView').classList.remove('text-perfume-purple', 'bg-perfume-purple', 'bg-opacity-10');
+            document.getElementById('listView').classList.add('text-gray-400');
+            
+            const grid = document.getElementById('productGrid');
+            grid.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8';
+        });
+
+        document.getElementById('listView').addEventListener('click', function() {
+            this.classList.add('text-perfume-purple', 'bg-perfume-purple', 'bg-opacity-10');
+            this.classList.remove('text-gray-400');
+            document.getElementById('gridView').classList.remove('text-perfume-purple', 'bg-perfume-purple', 'bg-opacity-10');
+            document.getElementById('gridView').classList.add('text-gray-400');
+            
+            const grid = document.getElementById('productGrid');
+            grid.className = 'space-y-4 mb-8';
+            
+            // カードをリスト表示に変更
+            const cards = grid.querySelectorAll('.perfume-card');
+            cards.forEach(card => {
+                card.classList.add('list-item');
+                card.classList.remove('bg-white', 'rounded-xl', 'shadow-lg', 'p-6', 'border', 'border-gray-100');
+            });
+        });
+
+        // ソート変更イベント
+        document.getElementById('sortSelect').addEventListener('change', applySorting);
+
+        // フィルター変更イベント
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                console.log('フィルター変更:', this.parentElement.textContent.trim());
+                applyFilters();
+            });
+        });
+
+        // 検索機能
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            console.log('検索:', searchTerm);
+            // 実際の実装では検索APIを呼び出し
+        });
+
+        // お気に入り機能（将来の実装用）
+        function toggleFavorite(perfumeId) {
+            console.log('お気に入り切り替え:', perfumeId);
+            // 実際の実装ではAPI呼び出し
+        }
+
+        // 詳細ページへの遷移
+        function viewPerfumeDetail(perfumeId) {
+            window.location.href = `perfume-detail.html?id=${perfumeId}`;
+        }
+    </script>
+</body>
+</html>

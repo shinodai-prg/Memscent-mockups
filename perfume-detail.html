@@ -1,0 +1,1600 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ミス ディオール - 香水詳細 | Memscent</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        perfume: {
+                            purple: '#8B4B7C',
+                            gold: '#D4A574',
+                            blue: '#A8C8E1',
+                            base: '#FAFAFA'
+                        }
+                    },
+                    fontFamily: {
+                        'noto': ['Noto Sans JP', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; }
+        .perfume-card { transition: all 0.3s ease; }
+        .perfume-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+        .star-filled { color: #D4A574; }
+        .star-empty { color: #E5E5E5; }
+        
+        /* 香調ピラミッド用スタイル */
+        .pyramid-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 500px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .pyramid-triangle {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, 
+                rgba(139, 75, 124, 0.15) 0%,
+                rgba(212, 165, 116, 0.12) 30%,
+                rgba(139, 75, 124, 0.08) 60%,
+                rgba(212, 165, 116, 0.05) 100%);
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            border-radius: 8px 8px 0 0;
+            box-shadow: 
+                0 20px 60px rgba(139, 75, 124, 0.15),
+                inset 0 1px 0 rgba(255,255,255,0.2),
+                inset 0 -1px 0 rgba(139, 75, 124, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 165, 116, 0.2);
+        }
+        
+        /* 区切り線の改善 - より高級感のあるデザイン */
+        .pyramid-divider {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(212, 165, 116, 0.8) 20%, 
+                rgba(212, 165, 116, 1) 50%, 
+                rgba(212, 165, 116, 0.8) 80%, 
+                transparent 100%);
+            box-shadow: 
+                0 0 20px rgba(212, 165, 116, 0.6),
+                0 1px 0 rgba(255,255,255,0.3),
+                0 -1px 0 rgba(139, 75, 124, 0.2);
+            z-index: 15;
+            border-radius: 1px;
+        }
+        
+        .pyramid-divider.top-start {
+            top: 20px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 0 12px rgba(255,255,255,0.8), 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        .pyramid-divider.top-divider {
+            top: 150px;
+            width: 160px;
+        }
+        
+        .pyramid-divider.middle-divider {
+            top: 280px;
+            width: 280px;
+        }
+        
+        .pyramid-section {
+            position: absolute;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            z-index: 10;
+        }
+        
+        .pyramid-top {
+            top: 70px;
+            height: 80px;
+        }
+        
+        .pyramid-middle {
+            top: 165px;
+            height: 80px;
+        }
+        
+        .pyramid-base {
+            top: 290px;
+            height: 100px;
+        }
+        
+        .pyramid-left {
+            flex: 1;
+            text-align: right;
+            padding-right: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end;
+        }
+        
+        .pyramid-right {
+            flex: 1;
+            text-align: left;
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        
+        .pyramid-center {
+            width: 220px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* ボックススタイル削除 - クリーンなデザインに */
+            background: none;
+            border: none;
+            min-height: 50px;
+        }
+        
+        .pyramid-ingredients {
+            display: flex;
+            gap: 12px;
+            font-size: 2rem;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
+            background: none;
+            border: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .pyramid-ingredients span {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            background: none;
+            border: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .pyramid-ingredients span:hover {
+            transform: scale(1.3);
+        }
+        
+        /* 香料画像スタイル */
+        .ingredient-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: center;
+            border: 3px solid rgba(212, 165, 116, 0.6);
+            box-shadow: 
+                0 8px 25px rgba(0,0,0,0.15),
+                0 4px 12px rgba(212, 165, 116, 0.3),
+                inset 0 1px 0 rgba(255,255,255,0.3);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        .ingredient-img:hover {
+            border-color: rgba(212, 165, 116, 0.9);
+            box-shadow: 
+                0 12px 40px rgba(0,0,0,0.2),
+                0 8px 20px rgba(212, 165, 116, 0.4),
+                inset 0 1px 0 rgba(255,255,255,0.4);
+            transform: translateY(-3px) scale(1.05);
+        }
+        
+        /* 星評価システム - 0.5刻み対応 */
+        .star-rating {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+        }
+        
+        .star {
+            position: relative;
+            width: 20px;
+            height: 20px;
+        }
+        
+        .star svg {
+            width: 100%;
+            height: 100%;
+            fill: #e5e7eb;
+            stroke: #d1d5db;
+            stroke-width: 1;
+            transition: all 0.2s ease;
+        }
+        
+        .star.filled svg {
+            fill: #fbbf24;
+            stroke: #f59e0b;
+        }
+        
+        .star.half-filled svg {
+            fill: url(#half-fill);
+            stroke: #f59e0b;
+        }
+        
+        /* ピラミッドセクション */
+        .pyramid-section {
+            position: absolute;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            z-index: 10;
+        }
+        
+        .pyramid-top {
+            top: 70px;
+            height: 80px;
+        }
+        
+        .pyramid-middle {
+            top: 165px;
+            height: 80px;
+        }
+        
+        .pyramid-base {
+            top: 290px;
+            height: 100px;
+        }
+        
+        .pyramid-left {
+            flex: 1;
+            text-align: right;
+            padding-right: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end;
+        }
+        
+        .pyramid-right {
+            flex: 1;
+            text-align: left;
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        
+        .pyramid-center {
+            width: 240px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: none;
+            border: none;
+            border-radius: 0;
+            backdrop-filter: none;
+            min-height: 60px;
+        }
+        
+        .pyramid-ingredients {
+            display: flex;
+            gap: 8px;
+            font-size: 2rem;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .note-label {
+            font-weight: bold;
+            color: #8B4B7C;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .note-description {
+            color: #555;
+            font-size: 0.75rem;
+            line-height: 1.3;
+            max-width: 120px;
+            margin-bottom: 2px;
+        }
+        
+        .note-duration {
+            color: #888;
+            font-size: 0.7rem;
+            font-style: italic;
+            opacity: 0.8;
+        }
+        
+        /* レーダーチャート風の評価 */
+        .rating-bar {
+            background: linear-gradient(90deg, #D4A574 0%, #8B4B7C 100%);
+            height: 8px;
+            border-radius: 4px;
+            transition: width 0.8s ease;
+        }
+        
+        /* タブスタイル */
+        .tab-active {
+            border-bottom: 3px solid #8B4B7C;
+            color: #8B4B7C;
+        }
+
+        /* 香料詳細モーダル */
+        .ingredient-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .ingredient-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .ingredient-modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: translateY(-50px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .ingredient-modal.active .ingredient-modal-content {
+            transform: translateY(0);
+        }
+
+        .ingredient-header {
+            background: linear-gradient(135deg, #8B4B7C 0%, #D4A574 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .ingredient-body {
+            padding: 24px;
+        }
+
+        .ingredient-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            margin: 0 auto 16px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .close-modal:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            /* ヘッダーの調整 */
+            header nav {
+                display: none !important;
+            }
+            
+            header .search-bar {
+                display: none !important;
+            }
+            
+            header h1 {
+                font-size: 1.5rem;
+            }
+            
+            /* 香水詳細ヘッダーの調整 */
+            .perfume-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1.5rem;
+            }
+            
+            .perfume-image {
+                margin: 0 auto;
+            }
+            
+            /* 香調ピラミッドの調整 */
+            .pyramid-container {
+                max-width: 100%;
+                height: 400px;
+                padding: 15px;
+            }
+            
+            .pyramid-triangle {
+                width: 300px;
+                height: 300px;
+            }
+            
+            /* タブの調整 */
+            .tab-list {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                gap: 0.5rem;
+                padding-bottom: 0.5rem;
+            }
+            
+            .tab-button {
+                flex-shrink: 0;
+                font-size: 0.875rem;
+                white-space: nowrap;
+            }
+            
+            /* レビューカードの調整 */
+            .review-card {
+                padding: 1rem;
+            }
+            
+            .review-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            /* 統計カードの調整 */
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+            }
+            
+            /* アクションボタンの調整 */
+            .action-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .action-buttons button {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            /* さらに小さい画面での調整 */
+            .pyramid-container {
+                height: 350px;
+                padding: 10px;
+            }
+            
+            .pyramid-triangle {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+            
+            .perfume-title {
+                font-size: 1.5rem;
+            }
+            
+            .brand-name {
+                font-size: 1rem;
+            }
+            
+            /* レビューフォームの調整 */
+            .review-form {
+                padding: 1rem;
+            }
+            
+            .rating-row {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            /* 極小画面での調整 */
+            .container {
+                padding: 0.5rem;
+            }
+            
+            .pyramid-container {
+                height: 300px;
+                margin: 1rem 0;
+            }
+            
+            .pyramid-triangle {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .section-title {
+                font-size: 1.25rem;
+            }
+            
+            .note-tag {
+                font-size: 0.75rem;
+                padding: 0.25rem 0.5rem;
+            }
+            
+            /* モーダルの調整 */
+            .modal-content {
+                margin: 1rem;
+                padding: 1rem;
+                border-radius: 0.75rem;
+            }
+            
+            .close-modal {
+                top: 8px;
+                right: 8px;
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- ヘッダー -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between py-4">
+                <!-- ロゴ -->
+                <div class="flex items-center flex-shrink-0">
+                    <a href="index.html" class="flex items-center">
+                        <h1 class="text-2xl font-semibold text-perfume-purple font-serif" style="letter-spacing: -0.01em;">Memscent</h1>
+                        <span class="ml-2 text-sm text-gray-500 hidden lg:block font-light">あなたの香りの記憶</span>
+                    </a>
+                </div>
+                
+                <!-- ナビゲーション（デスクトップ） -->
+                <nav class="hidden lg:flex items-center space-x-6 mx-8">
+                    <a href="index.html" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors whitespace-nowrap">ホーム</a>
+                    <a href="search-results.html" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors whitespace-nowrap">香水を探す</a>
+                    <a href="perfume-register.html" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors whitespace-nowrap">香水を登録</a>
+                    <a href="#" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors whitespace-nowrap">レビュー</a>
+                    <a href="#" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors whitespace-nowrap">ランキング</a>
+                    <a href="#" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors whitespace-nowrap">コミュニティ</a>
+                </nav>
+                
+                <!-- 右側メニュー -->
+                <div class="flex items-center space-x-4 flex-shrink-0">
+                    <!-- 検索バー -->
+                    <div class="hidden md:flex items-center bg-gray-100 rounded-full px-4 py-2 w-64">
+                        <svg class="w-5 h-5 text-gray-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <form onsubmit="searchPerfumes(event)" class="flex-1">
+                            <input type="text" id="headerSearchInput" placeholder="香水名、ブランド、香調で検索..." class="bg-transparent w-full outline-none text-sm">
+                        </form>
+                    </div>
+                    
+                    <!-- お気に入りボタン -->
+                    <button class="p-2 text-gray-600 hover:text-perfume-purple transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                        </svg>
+                    </button>
+                    
+                    <!-- ユーザーメニュー -->
+                    <div class="flex items-center space-x-3">
+                        <a href="login.html" class="text-gray-600 hover:text-perfume-purple font-medium transition-colors whitespace-nowrap">
+                            ログイン
+                        </a>
+                        <a href="register.html" class="bg-perfume-purple text-white px-4 py-2 rounded-full font-medium hover:bg-opacity-90 transition-all whitespace-nowrap">
+                            新規登録
+                        </a>
+                    </div>
+                    
+                    <!-- モバイルメニューボタン -->
+                    <button class="lg:hidden p-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- パンくずリスト -->
+    <div class="bg-white border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <nav class="flex text-sm">
+                <a href="index.html" class="text-gray-500 hover:text-perfume-purple">ホーム</a>
+                <span class="mx-2 text-gray-400">/</span>
+                <a href="#" class="text-gray-500 hover:text-perfume-purple">香水一覧</a>
+                <span class="mx-2 text-gray-400">/</span>
+                <a href="#" class="text-gray-500 hover:text-perfume-purple">Christian Dior</a>
+                <span class="mx-2 text-gray-400">/</span>
+                <span class="text-gray-900 font-light">ミス ディオール</span>
+            </nav>
+        </div>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- 左カラム: 香水画像とアクション -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden sticky top-24">
+                    <!-- 香水画像 -->
+                    <div class="aspect-square bg-gradient-to-br from-pink-100 to-purple-100 flex items-center justify-center relative group overflow-hidden">
+                        <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                            <span class="text-gray-500 text-lg">イメージ画像</span>
+                        </div>
+                        <button class="absolute top-4 right-4 p-3 bg-white rounded-full shadow-lg hover:bg-gray-50 transition-colors">
+                            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <!-- 香水情報 -->
+                    <div class="p-8" style="background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.95) 100%); backdrop-filter: blur(20px);">
+                        <h1 class="text-4xl font-light text-gray-900 mb-3" style="letter-spacing: 0.05em;">ミス ディオール</h1>
+                        <p class="text-xl text-gray-700 mb-6 font-medium" style="letter-spacing: 0.025em;">Christian Dior</p>
+                        
+                        <!-- 評価 -->
+                        <div class="flex items-center mb-6">
+                            <div class="star-rating mr-3">
+                                <svg style="display: none">
+                                    <defs>
+                                        <linearGradient id="star-fill-70">
+                                            <stop offset="70%" stop-color="#D4A574"/>
+                                            <stop offset="70%" stop-color="#e5e7eb"/>
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <span class="star filled">
+                                    <svg viewBox="0 0 24 24" width="20" height="20">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#D4A574"/>
+                                    </svg>
+                                </span>
+                                <span class="star filled">
+                                    <svg viewBox="0 0 24 24" width="20" height="20">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#D4A574"/>
+                                    </svg>
+                                </span>
+                                <span class="star filled">
+                                    <svg viewBox="0 0 24 24" width="20" height="20">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#D4A574"/>
+                                    </svg>
+                                </span>
+                                <span class="star filled">
+                                    <svg viewBox="0 0 24 24" width="20" height="20">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#D4A574"/>
+                                    </svg>
+                                </span>
+                                <span class="star partial-filled">
+                                    <svg viewBox="0 0 24 24" width="20" height="20">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="url(#star-fill-70)"/>
+                                    </svg>
+                                </span>
+                            </div>
+                            <span class="text-2xl font-bold text-perfume-purple mr-3">4.2</span>
+                            <span class="text-gray-500">(127件のレビュー)</span>
+                        </div>
+                        
+                        <!-- Have/Want/Had コレクション機能 (C001-C004) -->
+                        <div class="mb-8 p-6 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl border border-purple-100">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                                <span class="mr-2">📋</span>コレクションに追加
+                            </h3>
+                            
+                            <!-- コレクション選択ボタン -->
+                            <div class="grid grid-cols-3 gap-3 mb-4">
+                                <button id="collection-have" onclick="toggleCollection('have')" 
+                                        class="collection-btn p-3 rounded-lg border-2 border-green-200 bg-white hover:bg-green-50 transition-all duration-200 text-center group">
+                                    <div class="text-2xl mb-1">✅</div>
+                                    <div class="text-sm font-medium text-green-700">Have</div>
+                                    <div class="text-xs text-gray-500">持っている</div>
+                                </button>
+                                
+                                <button id="collection-want" onclick="toggleCollection('want')" 
+                                        class="collection-btn p-3 rounded-lg border-2 border-blue-200 bg-white hover:bg-blue-50 transition-all duration-200 text-center group">
+                                    <div class="text-2xl mb-1">💙</div>
+                                    <div class="text-sm font-medium text-blue-700">Want</div>
+                                    <div class="text-xs text-gray-500">欲しい</div>
+                                </button>
+                                
+                                <button id="collection-had" onclick="toggleCollection('had')" 
+                                        class="collection-btn p-3 rounded-lg border-2 border-purple-200 bg-white hover:bg-purple-50 transition-all duration-200 text-center group">
+                                    <div class="text-2xl mb-1">🕰️</div>
+                                    <div class="text-sm font-medium text-purple-700">Had</div>
+                                    <div class="text-xs text-gray-500">使ったことがある</div>
+                                </button>
+                            </div>
+                            
+                            <!-- 選択状態の表示 -->
+                            <div id="collection-status" class="text-sm text-gray-600 italic">
+                                コレクションに追加されていません
+                            </div>
+                            
+                            <!-- コレクション詳細情報（選択時に表示） -->
+                            <div id="collection-details" class="hidden mt-4 p-4 bg-white rounded-lg border">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h4 class="font-medium text-gray-900">詳細情報</h4>
+                                    <button onclick="closeCollectionDetails()" class="text-gray-400 hover:text-gray-600">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                                
+                                <!-- Haveの場合の詳細フォーム -->
+                                <div id="have-details" class="hidden space-y-3">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">購入日</label>
+                                        <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">購入場所</label>
+                                        <input type="text" placeholder="例：銀座三越" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">購入価格</label>
+                                        <input type="number" placeholder="例：12000" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
+                                    </div>
+                                </div>
+                                
+                                <!-- Wantの場合の詳細フォーム -->
+                                <div id="want-details" class="hidden space-y-3">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">優先度</label>
+                                        <select class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
+                                            <option value="high">高い - すぐに欲しい</option>
+                                            <option value="medium" selected>普通 - いつか欲しい</option>
+                                            <option value="low">低い - 興味がある程度</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">予算上限</label>
+                                        <input type="number" placeholder="例：15000" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
+                                    </div>
+                                </div>
+                                
+                                <!-- Hadの場合の詳細フォーム -->
+                                <div id="had-details" class="hidden space-y-3">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">使用期間</label>
+                                        <div class="grid grid-cols-2 gap-2">
+                                            <input type="date" placeholder="開始日" class="px-3 py-2 border border-gray-300 rounded-md text-sm">
+                                            <input type="date" placeholder="終了日" class="px-3 py-2 border border-gray-300 rounded-md text-sm">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">満足度</label>
+                                        <select class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
+                                            <option value="5">★★★★★ 非常に満足</option>
+                                            <option value="4">★★★★☆ 満足</option>
+                                            <option value="3" selected>★★★☆☆ 普通</option>
+                                            <option value="2">★★☆☆☆ やや不満</option>
+                                            <option value="1">★☆☆☆☆ 不満</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4 flex justify-end">
+                                    <button onclick="saveCollectionDetails()" class="px-4 py-2 bg-perfume-purple text-white rounded-md text-sm hover:bg-opacity-90 transition-colors">
+                                        保存
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- アクションボタン -->
+                        <div class="space-y-3">
+                            <a href="review-post.html" class="block w-full bg-perfume-purple text-white py-3 rounded-lg font-medium hover:bg-opacity-90 transition-colors text-center">
+                                レビューを書く
+                            </a>
+                            <button class="w-full border-2 border-perfume-gold text-perfume-gold hover:bg-perfume-gold hover:text-white py-3 rounded-lg font-medium transition-all">
+                                購入サイトへ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右カラム: 詳細情報 -->
+            <div class="lg:col-span-2">
+                
+                <!-- タブナビゲーション -->
+                <div class="bg-white rounded-t-xl shadow-lg">
+                    <div class="border-b border-gray-200">
+                        <nav class="flex space-x-8 px-6">
+                            <button onclick="showTab('overview')" class="tab-button py-4 px-1 border-b-2 border-perfume-purple text-perfume-purple font-medium text-sm">
+                                概要
+                            </button>
+                            <button onclick="showTab('notes')" class="tab-button py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium text-sm">
+                                香調
+                            </button>
+                            <button onclick="showTab('reviews')" class="tab-button py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium text-sm">
+                                レビュー
+                            </button>
+                            <button onclick="showTab('similar')" class="tab-button py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium text-sm">
+                                似ている香水
+                            </button>
+                        </nav>
+                    </div>
+                </div>
+                
+                <!-- タブコンテンツ -->
+                <div class="bg-white rounded-b-xl shadow-lg">
+                    <!-- 概要タブ -->
+                    <div id="overview-content" class="tab-content p-6">
+                        <div class="space-y-6">
+                            <!-- 基本情報 -->
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-3">基本情報</h3>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <dt class="text-sm font-medium text-gray-500 mb-1">発売年</dt>
+                                        <dd class="text-sm text-gray-900">2017年</dd>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <dt class="text-sm font-medium text-gray-500 mb-1">調香師</dt>
+                                        <dd class="text-sm text-gray-900">フランソワ・ドゥマシー</dd>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <dt class="text-sm font-medium text-gray-500 mb-1">香水のタイプ</dt>
+                                        <dd class="text-sm text-gray-900">オードゥパルファム</dd>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <dt class="text-sm font-medium text-gray-500 mb-1">主な香調</dt>
+                                        <dd class="text-sm text-gray-900">フローラル、フルーティー</dd>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 基本分類 (P005) -->
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-4">基本分類</h3>
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                    <!-- 性別分類 -->
+                                    <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-4 rounded-lg border border-purple-100">
+                                        <dt class="text-sm font-medium text-purple-700 mb-2 flex items-center">
+                                            <span class="mr-2">👤</span>対象性別
+                                        </dt>
+                                        <dd class="space-y-1">
+                                            <span class="inline-block bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">女性向け</span>
+                                            <span class="inline-block bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full opacity-50">男性向け</span>
+                                            <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">ユニセックス</span>
+                                        </dd>
+                                        <p class="text-xs text-gray-600 mt-2">エレガントで女性らしい印象ですが、ユニセックスとしても楽しめます</p>
+                                    </div>
+                                    
+                                    <!-- 季節分類 -->
+                                    <div class="bg-gradient-to-br from-green-50 to-blue-50 p-4 rounded-lg border border-green-100">
+                                        <dt class="text-sm font-medium text-green-700 mb-2 flex items-center">
+                                            <span class="mr-2">🌸</span>適用季節
+                                        </dt>
+                                        <dd class="space-y-1">
+                                            <span class="inline-block bg-pink-100 text-pink-800 text-xs px-2 py-1 rounded-full">春</span>
+                                            <span class="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">夏</span>
+                                            <span class="inline-block bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded-full">秋</span>
+                                            <span class="inline-block bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full opacity-50">冬</span>
+                                        </dd>
+                                        <p class="text-xs text-gray-600 mt-2">フレッシュな香りで春夏に特におすすめ</p>
+                                    </div>
+                                    
+                                    <!-- 時間帯分類 -->
+                                    <div class="bg-gradient-to-br from-yellow-50 to-orange-50 p-4 rounded-lg border border-yellow-100">
+                                        <dt class="text-sm font-medium text-orange-700 mb-2 flex items-center">
+                                            <span class="mr-2">🕐</span>適用時間帯
+                                        </dt>
+                                        <dd class="space-y-1">
+                                            <span class="inline-block bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">朝</span>
+                                            <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">昼</span>
+                                            <span class="inline-block bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">夕方</span>
+                                            <span class="inline-block bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full opacity-50">夜</span>
+                                        </dd>
+                                        <p class="text-xs text-gray-600 mt-2">日中の活動的なシーンに最適</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- 詳細分類タグ -->
+                                <div class="mt-6">
+                                    <h4 class="text-md font-medium text-gray-800 mb-3">シーン別適性</h4>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="bg-perfume-purple bg-opacity-10 text-perfume-purple text-sm px-3 py-1 rounded-full border border-perfume-purple border-opacity-20">オフィス</span>
+                                        <span class="bg-perfume-gold bg-opacity-10 text-perfume-gold text-sm px-3 py-1 rounded-full border border-perfume-gold border-opacity-20">デート</span>
+                                        <span class="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full">カジュアル</span>
+                                        <span class="bg-green-100 text-green-800 text-sm px-3 py-1 rounded-full">アウトドア</span>
+                                        <span class="bg-gray-100 text-gray-600 text-sm px-3 py-1 rounded-full opacity-50">フォーマル</span>
+                                        <span class="bg-indigo-100 text-indigo-800 text-sm px-3 py-1 rounded-full">特別な日</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 総合評価 -->
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-4">総合評価</h3>
+                                <div class="space-y-4">
+                                    <div class="flex items-center">
+                                        <span class="w-16 text-sm font-medium text-gray-700">香り</span>
+                                        <div class="flex-1 mx-4 bg-gray-200 rounded-full h-2">
+                                            <div class="rating-bar" style="width: 85%"></div>
+                                        </div>
+                                        <span class="text-sm font-semibold text-gray-900">4.3/5</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <span class="w-16 text-sm font-medium text-gray-700">持続性</span>
+                                        <div class="flex-1 mx-4 bg-gray-200 rounded-full h-2">
+                                            <div class="rating-bar" style="width: 70%"></div>
+                                        </div>
+                                        <span class="text-sm font-semibold text-gray-900">3.5/5</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <span class="w-16 text-sm font-medium text-gray-700">拡散性</span>
+                                        <div class="flex-1 mx-4 bg-gray-200 rounded-full h-2">
+                                            <div class="rating-bar" style="width: 80%"></div>
+                                        </div>
+                                        <span class="text-sm font-semibold text-gray-900">4.0/5</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <span class="w-16 text-sm font-medium text-gray-700">コスパ</span>
+                                        <div class="flex-1 mx-4 bg-gray-200 rounded-full h-2">
+                                            <div class="rating-bar" style="width: 75%"></div>
+                                        </div>
+                                        <span class="text-sm font-semibold text-gray-900">3.8/5</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 説明 -->
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-3">説明</h3>
+                                <p class="text-gray-700 leading-relaxed">
+                                    透明感あふれる女性らしさを表現した、モダン・クラシックな香水。
+                                    朝露に濡れたシトラスの輝きから始まり、スパイシーなピンクペッパーが心地よいアクセントを加えます。
+                                    心の奥に響く、グラース産ローズとピオニーの上品なブーケが時間とともに花開き、
+                                    最後はバニラとサンダルウッドの温かな抱擁に包まれます。現代女性の凛とした美しさを演出する、洗練された一品です。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 香調タブ -->
+                    <div id="notes-content" class="tab-content p-6 hidden">
+                        <div class="space-y-8">
+                            <!-- 香調ピラミッド -->
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-6 text-center">香調ピラミッド</h3>
+                                <div class="pyramid-container mb-8">
+                                    <!-- 三角形の背景 -->
+                                    <div class="pyramid-triangle"></div>
+                                    
+                                    <!-- 区切り線 -->
+                                    <div class="pyramid-divider top-divider"></div>
+                                    <div class="pyramid-divider middle-divider"></div>
+                                    
+                                    <!-- トップノート -->
+                                    <div class="pyramid-section pyramid-top">
+                                        <div class="pyramid-left">
+                                            <div class="note-label">トップノート</div>
+                                            <div class="note-description">最初に広がる軽やかな香り</div>
+                                            <div class="note-duration">5分〜15分ほど香る</div>
+                                        </div>
+                                        <div class="pyramid-center">
+                                            <div class="pyramid-ingredients">
+                                                <span data-ingredient="blood-orange">
+                                                    <div class="ingredient-img bg-orange-200 flex items-center justify-center text-xs text-gray-600 border-3 border-orange-300">
+                                                        橙
+                                                    </div>
+                                                </span>
+                                                <span data-ingredient="lemon">
+                                                    <div class="ingredient-img bg-yellow-200 flex items-center justify-center text-xs text-gray-600 border-3 border-yellow-300">
+                                                        檸
+                                                    </div>
+                                                </span>
+                                                <span data-ingredient="pink-pepper">
+                                                    <div class="ingredient-img bg-pink-200 flex items-center justify-center text-xs text-gray-600 border-3 border-pink-300">
+                                                        椒
+                                                    </div>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="pyramid-right">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- ミドルノート -->
+                                    <div class="pyramid-section pyramid-middle">
+                                        <div class="pyramid-left">
+                                        </div>
+                                        <div class="pyramid-center">
+                                            <div class="pyramid-ingredients">
+                                                <span data-ingredient="grasse-rose">
+                                                    <div class="ingredient-img bg-rose-200 flex items-center justify-center text-xs text-gray-600 border-3 border-rose-300">
+                                                        薔
+                                                    </div>
+                                                </span>
+                                                <span data-ingredient="peony">
+                                                    <div class="ingredient-img bg-pink-200 flex items-center justify-center text-xs text-gray-600 border-3 border-pink-300">
+                                                        牡
+                                                    </div>
+                                                </span>
+                                                <span data-ingredient="jasmine">
+                                                    <div class="ingredient-img bg-purple-200 flex items-center justify-center text-xs text-gray-600 border-3 border-purple-300">
+                                                        茉
+                                                    </div>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="pyramid-right">
+                                            <div class="note-label">ミドルノート</div>
+                                            <div class="note-description">香水の核となる華やかな香り</div>
+                                            <div class="note-duration">30分〜2時間ほど香る</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- ラストノート -->
+                                    <div class="pyramid-section pyramid-base">
+                                        <div class="pyramid-left">
+                                            <div class="note-label">ラストノート</div>
+                                            <div class="note-description">深みのある持続する香り</div>
+                                            <div class="note-duration">2時間以降も最後まで香る</div>
+                                        </div>
+                                        <div class="pyramid-center">
+                                            <div class="pyramid-ingredients">
+                                                <span data-ingredient="vanilla">
+                                                    <div class="ingredient-img bg-amber-200 flex items-center justify-center text-xs text-gray-600 border-3 border-amber-300">
+                                                        蘭
+                                                    </div>
+                                                </span>
+                                                <span data-ingredient="sandalwood">
+                                                    <div class="ingredient-img bg-yellow-200 flex items-center justify-center text-xs text-gray-600 border-3 border-yellow-300">
+                                                        檀
+                                                    </div>
+                                                </span>
+                                                <span data-ingredient="white-musk">
+                                                    <div class="ingredient-img bg-gray-200 flex items-center justify-center text-xs text-gray-600 border-3 border-gray-300">
+                                                        麝
+                                                    </div>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="pyramid-right">
+                                            <div class="note-details">
+                                                <h4 class="font-medium text-perfume-purple mb-2">持続性のある香り</h4>
+                                                <p class="text-sm text-gray-600">バニラとサンダルウッドの温かみのある香りが、ホワイトムスクと調和して上品な余韻を演出</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 香調の詳細説明 -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div class="bg-gradient-to-br from-orange-50 to-yellow-50 p-6 rounded-xl border border-orange-200">
+                                    <h4 class="font-semibold text-orange-800 mb-3">🍊 トップノート</h4>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm text-gray-700">ブラッドオレンジ</span>
+                                            <span class="text-xs text-orange-600 bg-orange-100 px-2 py-1 rounded-full">シトラス</span>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm text-gray-700">レモン</span>
+                                            <span class="text-xs text-orange-600 bg-orange-100 px-2 py-1 rounded-full">フレッシュ</span>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm text-gray-700">ベルガモット</span>
+                                            <span class="text-xs text-orange-600 bg-orange-100 px-2 py-1 rounded-full">爽快</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-gradient-to-br from-pink-50 to-purple-50 p-6 rounded-xl border border-pink-200">
+                                    <h4 class="font-semibold text-purple-800 mb-3">🌸 ミドルノート</h4>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm text-gray-700">ローズ</span>
+                                            <span class="text-xs text-purple-600 bg-purple-100 px-2 py-1 rounded-full">フローラル</span>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm text-gray-700">ジャスミン</span>
+                                            <span class="text-xs text-purple-600 bg-purple-100 px-2 py-1 rounded-full">エレガント</span>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm text-gray-700">ピオニー</span>
+                                            <span class="text-xs text-purple-600 bg-purple-100 px-2 py-1 rounded-full">上品</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-gradient-to-br from-amber-50 to-brown-50 p-6 rounded-xl border border-amber-200">
+                                    <h4 class="font-semibold text-amber-800 mb-3">🪵 ベースノート</h4>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm text-gray-700">バニラ</span>
+                                            <span class="text-xs text-amber-600 bg-amber-100 px-2 py-1 rounded-full">甘美</span>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm text-gray-700">サンダルウッド</span>
+                                            <span class="text-xs text-amber-600 bg-amber-100 px-2 py-1 rounded-full">ウッディ</span>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm text-gray-700">ホワイトムスク</span>
+                                            <span class="text-xs text-amber-600 bg-amber-100 px-2 py-1 rounded-full">セクシー</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- レビュータブ -->
+                    <div id="reviews-content" class="tab-content p-6 hidden">
+                        <div class="space-y-6">
+                            <!-- レビュー統計 -->
+                            <div class="bg-gradient-to-r from-perfume-purple/10 to-perfume-gold/10 rounded-xl p-6">
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <div class="text-center">
+                                        <div class="text-3xl font-bold text-perfume-purple mb-2">4.6</div>
+                                        <div class="flex justify-center mb-2">
+                                            <span class="star-filled">★★★★★</span>
+                                        </div>
+                                        <div class="text-sm text-gray-600">189件のレビュー</div>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center space-x-2">
+                                            <span class="text-sm w-8">5★</span>
+                                            <div class="flex-1 bg-gray-200 rounded-full h-2">
+                                                <div class="bg-perfume-gold h-2 rounded-full" style="width: 70%"></div>
+                                            </div>
+                                            <span class="text-sm text-gray-600">132</span>
+                                        </div>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="text-sm w-8">4★</span>
+                                            <div class="flex-1 bg-gray-200 rounded-full h-2">
+                                                <div class="bg-perfume-gold h-2 rounded-full" style="width: 20%"></div>
+                                            </div>
+                                            <span class="text-sm text-gray-600">38</span>
+                                        </div>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="text-sm w-8">3★</span>
+                                            <div class="flex-1 bg-gray-200 rounded-full h-2">
+                                                <div class="bg-perfume-gold h-2 rounded-full" style="width: 8%"></div>
+                                            </div>
+                                            <span class="text-sm text-gray-600">15</span>
+                                        </div>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="text-sm w-8">2★</span>
+                                            <div class="flex-1 bg-gray-200 rounded-full h-2">
+                                                <div class="bg-perfume-gold h-2 rounded-full" style="width: 2%"></div>
+                                            </div>
+                                            <span class="text-sm text-gray-600">3</span>
+                                        </div>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="text-sm w-8">1★</span>
+                                            <div class="flex-1 bg-gray-200 rounded-full h-2">
+                                                <div class="bg-perfume-gold h-2 rounded-full" style="width: 1%"></div>
+                                            </div>
+                                            <span class="text-sm text-gray-600">1</span>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <button class="bg-perfume-purple text-white px-6 py-3 rounded-lg font-medium hover:bg-opacity-90 transition-colors">
+                                            レビューを書く
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- レビュー一覧 -->
+                            <div class="space-y-4">
+                                <!-- レビュー1 -->
+                                <div class="bg-white p-6 rounded-xl border border-gray-200">
+                                    <div class="flex items-start space-x-4">
+                                        <div class="w-12 h-12 bg-perfume-purple rounded-full flex items-center justify-center text-white font-medium">
+                                            香
+                                        </div>
+                                        <div class="flex-1">
+                                            <div class="flex items-center justify-between mb-2">
+                                                <div>
+                                                    <h4 class="font-medium text-gray-900">香子さん</h4>
+                                                    <div class="flex items-center space-x-2">
+                                                        <span class="star-filled text-sm">★★★★★</span>
+                                                        <span class="text-sm text-gray-500">2024年9月15日</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <p class="text-gray-700 mb-3">上品で洗練された香りで、特に春夏にぴったりです。トップのシトラスがとても爽やかで、その後に広がるフローラルノートが美しく調和しています。持続性も申し分ありません。</p>
+                                            <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                                <button class="hover:text-perfume-purple">👍 参考になった (12)</button>
+                                                <button class="hover:text-perfume-purple">返信</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- レビュー2 -->
+                                <div class="bg-white p-6 rounded-xl border border-gray-200">
+                                    <div class="flex items-start space-x-4">
+                                        <div class="w-12 h-12 bg-perfume-gold rounded-full flex items-center justify-center text-white font-medium">
+                                            美
+                                        </div>
+                                        <div class="flex-1">
+                                            <div class="flex items-center justify-between mb-2">
+                                                <div>
+                                                    <h4 class="font-medium text-gray-900">美香さん</h4>
+                                                    <div class="flex items-center space-x-2">
+                                                        <span class="star-filled text-sm">★★★★</span>
+                                                        <span class="star-empty text-sm">★</span>
+                                                        <span class="text-sm text-gray-500">2024年8月22日</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <p class="text-gray-700 mb-3">とても良い香りですが、私には少し甘すぎるかもしれません。でも、エレガントで大人っぽい印象を与えてくれる素敵な香水だと思います。</p>
+                                            <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                                <button class="hover:text-perfume-purple">👍 参考になった (8)</button>
+                                                <button class="hover:text-perfume-purple">返信</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- もっと見るボタン -->
+                            <div class="text-center">
+                                <button class="border border-perfume-purple text-perfume-purple px-6 py-3 rounded-lg font-medium hover:bg-perfume-purple hover:text-white transition-colors">
+                                    もっとレビューを見る
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 似ている香水タブ -->
+                    <div id="similar-content" class="tab-content p-6 hidden">
+                        <h3 class="text-xl font-semibold mb-6">この香水に似ている香水</h3>
+                        
+                        <!-- 類似度の説明 -->
+                        <div class="bg-blue-50 rounded-lg p-4 mb-6">
+                            <p class="text-sm text-blue-800">
+                                <span class="font-medium">類似度の判定基準：</span>
+                                香調、ブランド、価格帯、ユーザーの嗜好データを総合的に分析して算出しています。
+                            </p>
+                        </div>
+
+                        <!-- 似ている香水リスト -->
+                        <div class="grid gap-6">
+                            <!-- 類似香水1 -->
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex space-x-4">
+                                    <img src="https://via.placeholder.com/80x120" alt="シャネル ココ マドモアゼル" class="w-20 h-30 object-cover rounded">
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <h4 class="font-semibold text-lg">ココ マドモアゼル</h4>
+                                            <div class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
+                                                類似度 92%
+                                            </div>
+                                        </div>
+                                        <p class="text-gray-600 text-sm mb-2">シャネル</p>
+                                        <p class="text-sm text-gray-500 mb-3">オリエンタル・フローラルの代表格。パチョリとローズの組み合わせが共通点。</p>
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-2">
+                                                <span class="star-filled text-sm">★★★★</span>
+                                                <span class="star-empty text-sm">★</span>
+                                                <span class="text-sm text-gray-500">(4.2)</span>
+                                            </div>
+                                            <span class="text-sm font-medium text-gray-700">¥15,400～</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 類似香水2 -->
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex space-x-4">
+                                    <img src="https://via.placeholder.com/80x120" alt="ランコム ラ ヴィ エ ベル" class="w-20 h-30 object-cover rounded">
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <h4 class="font-semibold text-lg">ラ ヴィ エ ベル</h4>
+                                            <div class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
+                                                類似度 88%
+                                            </div>
+                                        </div>
+                                        <p class="text-gray-600 text-sm mb-2">ランコム</p>
+                                        <p class="text-sm text-gray-500 mb-3">フローラル・グルマンの王道。甘さと花の香りのバランスが類似。</p>
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-2">
+                                                <span class="star-filled text-sm">★★★★★</span>
+                                                <span class="text-sm text-gray-500">(4.6)</span>
+                                            </div>
+                                            <span class="text-sm font-medium text-gray-700">¥12,800～</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 類似香水3 -->
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex space-x-4">
+                                    <img src="https://via.placeholder.com/80x120" alt="ヴィクター&ロルフ フラワーボム" class="w-20 h-30 object-cover rounded">
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <h4 class="font-semibold text-lg">フラワーボム</h4>
+                                            <div class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">
+                                                類似度 85%
+                                            </div>
+                                        </div>
+                                        <p class="text-gray-600 text-sm mb-2">ヴィクター&ロルフ</p>
+                                        <p class="text-sm text-gray-500 mb-3">爆発的な花の香り。フローラルブーケの表現が共通。</p>
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-2">
+                                                <span class="star-filled text-sm">★★★★</span>
+                                                <span class="star-empty text-sm">★</span>
+                                                <span class="text-sm text-gray-500">(4.3)</span>
+                                            </div>
+                                            <span class="text-sm font-medium text-gray-700">¥11,200～</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 類似香水4 -->
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex space-x-4">
+                                    <img src="https://via.placeholder.com/80x120" alt="ディオール ミス ディオール" class="w-20 h-30 object-cover rounded">
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <h4 class="font-semibold text-lg">ミス ディオール</h4>
+                                            <div class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">
+                                                類似度 82%
+                                            </div>
+                                        </div>
+                                        <p class="text-gray-600 text-sm mb-2">ディオール</p>
+                                        <p class="text-sm text-gray-500 mb-3">エレガントなローズとパチョリ。同じ高級感のある仕上がり。</p>
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-2">
+                                                <span class="star-filled text-sm">★★★★</span>
+                                                <span class="star-empty text-sm">★</span>
+                                                <span class="text-sm text-gray-500">(4.1)</span>
+                                            </div>
+                                            <span class="text-sm font-medium text-gray-700">¥13,600～</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- もっと見るボタン -->
+                        <div class="text-center mt-6">
+                            <button class="border border-perfume-purple text-perfume-purple px-6 py-3 rounded-lg font-medium hover:bg-perfume-purple hover:text-white transition-colors">
+                                もっと見る
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- フッター -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- 会社情報 -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Memscent</h3>
+                    <p class="text-gray-300 mb-4">
+                        あなたの香りの記憶を大切にする、香水レビューコミュニティサイトです。
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-300 hover:text-white">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.083.402-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.583-1.378 0 0-.636 2.122-.636 2.122-.23.876-.85 1.97-1.265 2.653.951.29 1.956.447 3.002.447C18.624 24.013 24.013 18.624 24.013 11.987 24.013 5.367 18.646.001 12.017.001z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- リンク1 -->
+                <div>
+                    <h4 class="font-semibold mb-4">サービス</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white">香水検索</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">レビュー投稿</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">ランキング</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">おすすめ機能</a></li>
+                    </ul>
+                </div>
+
+                <!-- リンク2 -->
+                <div>
+                    <h4 class="font-semibold mb-4">コミュニティ</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white">フォーラム</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">イベント</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">専門家コラム</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">Q&A</a></li>
+                    </ul>
+                </div>
+
+                <!-- リンク3 -->
+                <div>
+                    <h4 class="font-semibold mb-4">サポート</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white">ヘルプセンター</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">お問い合わせ</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">プライバシーポリシー</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">利用規約</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+                <p class="text-gray-300">&copy; 2025 Memscent. All rights reserved. あなたの香りの記憶を大切に。</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // タブ機能
+        function showTab(tabName) {
+            // すべてのタブコンテンツを非表示
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            // すべてのタブボタンから active クラスを削除
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('border-perfume-purple', 'text-perfume-purple');
+                button.classList.add('border-transparent', 'text-gray-500');
+            });
+            
+            // 選択されたタブコンテンツを表示
+            const targetContent = document.getElementById(tabName + '-content');
+            if (targetContent) {
+                targetContent.classList.remove('hidden');
+            }
+            
+            // 選択されたタブボタンに active クラスを追加
+            const activeButton = document.querySelector(`[onclick="showTab('${tabName}')"]`);
+            if (activeButton) {
+                activeButton.classList.add('border-perfume-purple', 'text-perfume-purple');
+                activeButton.classList.remove('border-transparent', 'text-gray-500');
+            }
+        }
+
+        // 香調ピラミッドインタラクション
+        document.addEventListener('DOMContentLoaded', function() {
+            // 成分にホバー効果を追加
+            const ingredients = document.querySelectorAll('[data-ingredient]');
+            ingredients.forEach(ingredient => {
+                const ingredientName = ingredient.getAttribute('data-ingredient');
+                
+                ingredient.addEventListener('mouseenter', function() {
+                    // ツールチップ表示（簡易版）
+                    this.style.transform = 'scale(1.1)';
+                    this.style.transition = 'transform 0.2s ease';
+                });
+                
+                ingredient.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                });
+                
+                ingredient.addEventListener('click', function() {
+                    // 成分の詳細情報を表示（模擬）
+                    alert(`${ingredientName}の詳細情報はここに表示されます`);
+                });
+            });
+        });
+
+        // お気に入り機能
+        function toggleFavorite() {
+            const button = document.querySelector('.favorite-btn');
+            const icon = button.querySelector('svg');
+            const text = button.querySelector('span');
+            
+            if (button.classList.contains('favorited')) {
+                button.classList.remove('favorited', 'bg-red-500', 'text-white');
+                button.classList.add('border-gray-300', 'text-gray-700', 'hover:border-red-500', 'hover:text-red-500');
+                text.textContent = 'お気に入り';
+                icon.classList.remove('fill-current');
+            } else {
+                button.classList.add('favorited', 'bg-red-500', 'text-white');
+                button.classList.remove('border-gray-300', 'text-gray-700', 'hover:border-red-500', 'hover:text-red-500');
+                text.textContent = 'お気に入り済み';
+                icon.classList.add('fill-current');
+            }
+        }
+
+        // 検索機能
+        function searchPerfumes(event) {
+            event.preventDefault();
+            const searchTerm = document.getElementById('headerSearchInput').value;
+            console.log('検索:', searchTerm);
+            // 実際の実装では検索結果ページに遷移
+            window.location.href = `search-results.html?q=${encodeURIComponent(searchTerm)}`;
+        }
+
+        // 価格比較リンク
+        function openPriceComparison() {
+            // 実際の実装では価格比較サイトのAPIを呼び出し
+            alert('価格比較サイトへのリンク機能はここに実装されます');
+        }
+
+        // レビュー投稿
+        function openReviewForm() {
+            // 実際の実装ではレビュー投稿フォームを表示
+            window.location.href = 'review-post.html';
+        }
+
+        // 初期表示時は概要タブをアクティブに
+        document.addEventListener('DOMContentLoaded', function() {
+            showTab('overview');
+        });
+    </script>
+</body>
+</html>

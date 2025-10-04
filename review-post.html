@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>レビューを投稿 | Memscent</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        perfume: {
+                            purple: '#8B4B7C',
+                            gold: '#D4A574',
+                            blue: '#A8C8E1',
+                            base: '#FAFAFA'
+                        }
+                    },
+                    fontFamily: {
+                        'noto': ['Noto Sans JP', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; }
+        .rating-card {
+            background: linear-gradient(135deg, rgba(139, 75, 124, 0.05) 0%, rgba(212, 165, 116, 0.08) 100%);
+            border: 1px solid rgba(139, 75, 124, 0.1);
+        }
+        .star { 
+            cursor: pointer; 
+            transition: all 0.2s ease; 
+            user-select: none;
+        }
+        .star:hover { 
+            transform: scale(1.1); 
+        }
+        .overall-score {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #8B4B7C, #D4A574);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            /* ヘッダーの調整 */
+            header nav {
+                display: none !important;
+            }
+            
+            header .search-bar {
+                display: none !important;
+            }
+            
+            header h1 {
+                font-size: 1.5rem;
+            }
+            
+            /* レビューフォームの調整 */
+            .review-container {
+                padding: 1rem;
+            }
+            
+            .rating-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .overall-score {
+                font-size: 2.5rem;
+            }
+            
+            /* 香水情報カードの調整 */
+            .perfume-info {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .perfume-image {
+                margin: 0 auto;
+            }
+            
+            /* ボタンの調整 */
+            .form-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .form-buttons button {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            /* さらに小さい画面での調整 */
+            .rating-card {
+                padding: 1rem;
+            }
+            
+            .overall-score {
+                font-size: 2rem;
+            }
+            
+            .star {
+                font-size: 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 1.25rem;
+            }
+            
+            /* テキストエリアの調整 */
+            .review-textarea {
+                min-height: 120px;
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            /* 極小画面での調整 */
+            .container {
+                padding: 0.5rem;
+            }
+            
+            .rating-card {
+                margin: 0.5rem 0;
+                padding: 0.75rem;
+            }
+            
+            .overall-score {
+                font-size: 1.8rem;
+            }
+            
+            .star {
+                font-size: 1.25rem;
+                margin: 0 0.125rem;
+            }
+            
+            .input-field {
+                font-size: 1rem; /* iOS Safariでのズーム防止 */
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- ヘッダー -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <!-- ロゴ -->
+                <div class="flex items-center">
+                    <a href="index.html" class="flex items-center">
+                        <h1 class="text-2xl font-semibold text-perfume-purple font-serif">Memscent</h1>
+                        <span class="ml-2 text-sm text-gray-500 hidden sm:block">あなたの香りの記憶</span>
+                    </a>
+                </div>
+                
+                <!-- ナビゲーション（デスクトップ） -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors">ホーム</a>
+                    <a href="search-results.html" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors">香水を探す</a>
+                    <a href="#" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors">レビュー</a>
+                    <a href="user-profile.html" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors">マイページ</a>
+                </nav>
+                
+                <!-- ユーザーメニュー -->
+                <div class="flex items-center space-x-4">
+                    <button class="p-2 text-gray-600 hover:text-perfume-purple">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"></path>
+                        </svg>
+                    </button>
+                    <button onclick="window.location.href='login.html'" class="bg-perfume-purple text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-opacity-90 transition-colors">
+                        ログイン
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- パンくずリスト -->
+    <div class="bg-white border-b">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <nav class="flex text-sm">
+                <a href="index.html" class="text-gray-500 hover:text-perfume-purple">ホーム</a>
+                <span class="mx-2 text-gray-400">/</span>
+                <a href="perfume-detail.html" class="text-gray-500 hover:text-perfume-purple">ミス ディオール</a>
+                <span class="mx-2 text-gray-400">/</span>
+                <span class="text-gray-900 font-medium">レビュー投稿</span>
+            </nav>
+        </div>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <!-- ヘッダー -->
+            <div class="bg-gradient-to-r from-perfume-purple to-perfume-gold p-6 text-white">
+                <h1 class="text-2xl font-bold mb-4">レビューを投稿</h1>
+                <div class="flex items-center space-x-4">
+                    <div class="w-16 h-16 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                        <span class="text-sm font-medium">ミス</span>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-semibold">ミス ディオール</h2>
+                        <p class="text-sm opacity-90">Christian Dior</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- フォーム -->
+            <form class="p-6 space-y-8" id="reviewForm">
+                <!-- 総合評価表示 -->
+                <div class="bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-100 rounded-xl p-6">
+                    <div class="text-center">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-4">総合評価</h3>
+                        <div class="overall-score" id="overall-rating">-.-</div>
+                        <div class="flex justify-center mt-3 space-x-1" id="overall-stars">
+                            <span class="star text-3xl text-gray-300">★</span>
+                            <span class="star text-3xl text-gray-300">★</span>
+                            <span class="star text-3xl text-gray-300">★</span>
+                            <span class="star text-3xl text-gray-300">★</span>
+                            <span class="star text-3xl text-gray-300">★</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2">4項目の平均評価が自動計算されます</p>
+                    </div>
+                </div>
+
+                <!-- 4項目評価システム -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- 香り評価 -->
+                    <div class="rating-card p-6 rounded-xl">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                            <span class="text-2xl mr-3">👃</span>
+                            香り
+                        </h3>
+                        <div class="rating-area" data-category="fragrance">
+                            <div class="flex space-x-1 mb-3">
+                                <span class="star text-3xl text-gray-300" data-value="1">★</span>
+                                <span class="star text-3xl text-gray-300" data-value="2">★</span>
+                                <span class="star text-3xl text-gray-300" data-value="3">★</span>
+                                <span class="star text-3xl text-gray-300" data-value="4">★</span>
+                                <span class="star text-3xl text-gray-300" data-value="5">★</span>
+                            </div>
+                            <input type="hidden" name="fragrance_rating" value="0">
+                            <div class="text-sm text-gray-600 mb-3">
+                                好み・印象・複雑さ・バランスなど
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 持続性評価 -->
+                    <div class="rating-card p-6 rounded-xl">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                            <span class="text-2xl mr-3">⏰</span>
+                            持続性
+                        </h3>
+                        <div class="rating-area" data-category="longevity">
+                            <div class="flex space-x-1 mb-3">
+                                <span class="star text-3xl text-gray-300" data-value="1">★</span>
+                                <span class="star text-3xl text-gray-300" data-value="2">★</span>
+                                <span class="star text-3xl text-gray-300" data-value="3">★</span>
+                                <span class="star text-3xl text-gray-300" data-value="4">★</span>
+                                <span class="star text-3xl text-gray-300" data-value="5">★</span>
+                            </div>
+                            <input type="hidden" name="longevity_rating" value="0">
+                            <div class="text-sm text-gray-600 mb-3">
+                                1-2時間 → 3-4時間 → 5-6時間 → 7-8時間 → 9時間以上
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 拡散性評価 -->
+                    <div class="rating-card p-6 rounded-xl">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                            <span class="text-2xl mr-3">📡</span>
+                            拡散性
+                        </h3>
+                        <div class="rating-area" data-category="sillage">
+                            <div class="flex space-x-1 mb-3">
+                                <span class="star text-3xl text-gray-300" data-value="1">★</span>
+                                <span class="star text-3xl text-gray-300" data-value="2">★</span>
+                                <span class="star text-3xl text-gray-300" data-value="3">★</span>
+                                <span class="star text-3xl text-gray-300" data-value="4">★</span>
+                                <span class="star text-3xl text-gray-300" data-value="5">★</span>
+                            </div>
+                            <input type="hidden" name="sillage_rating" value="0">
+                            <div class="text-sm text-gray-600 mb-3">
+                                弱い → やや弱い → 適度 → やや強い → 強い
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 価格対効果評価 -->
+                    <div class="rating-card p-6 rounded-xl">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                            <span class="text-2xl mr-3">💰</span>
+                            価格対効果
+                        </h3>
+                        <div class="rating-area" data-category="value">
+                            <div class="flex space-x-1 mb-3">
+                                <span class="star text-3xl text-gray-300" data-value="1">★</span>
+                                <span class="star text-3xl text-gray-300" data-value="2">★</span>
+                                <span class="star text-3xl text-gray-300" data-value="3">★</span>
+                                <span class="star text-3xl text-gray-300" data-value="4">★</span>
+                                <span class="star text-3xl text-gray-300" data-value="5">★</span>
+                            </div>
+                            <input type="hidden" name="value_rating" value="0">
+                            <div class="text-sm text-gray-600 mb-3">
+                                価格と品質・満足度のバランス
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 詳細レビュー -->
+                <div class="bg-gray-50 p-6 rounded-xl">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                        <span class="text-2xl mr-3">✍️</span>
+                        詳細レビュー
+                    </h3>
+                    
+                    <!-- レビュータイトル -->
+                    <div class="mb-6">
+                        <label for="reviewTitle" class="block text-sm font-medium text-gray-700 mb-2">
+                            レビュータイトル <span class="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="reviewTitle"
+                            name="reviewTitle"
+                            required
+                            maxlength="100"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-perfume-purple focus:border-transparent"
+                            placeholder="例：上品で洗練された大人の香り"
+                        >
+                        <div class="text-xs text-gray-500 mt-1 text-right">
+                            <span id="title-count">0</span>/100文字
+                        </div>
+                    </div>
+
+                    <!-- レビューテキスト -->
+                    <div class="mb-6">
+                        <label for="reviewText" class="block text-sm font-medium text-gray-700 mb-2">
+                            レビュー内容 <span class="text-red-500">*</span>
+                        </label>
+                        <textarea
+                            id="reviewText"
+                            name="reviewText"
+                            required
+                            rows="6"
+                            maxlength="2000"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-perfume-purple focus:border-transparent resize-none"
+                            placeholder="香りの印象、使用感、おすすめシーンなど詳しく教えてください...
+
+例：
+・最初はフレッシュなシトラスが香り、時間が経つとローズの優雅な香りに変化
+・オフィスでも使えるエレガントな香り
+・5-6時間ほど持続し、ほどよい拡散性"
+                        ></textarea>
+                        <div class="text-xs text-gray-500 mt-1 flex justify-between">
+                            <span>具体的で詳細なレビューは他のユーザーにとても参考になります</span>
+                            <span><span id="text-count">0</span>/2000文字</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 使用情報 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- 使用シーン -->
+                    <div class="bg-gradient-to-br from-indigo-50 to-purple-50 p-6 rounded-xl border border-indigo-100">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                            <span class="text-2xl mr-3">🎭</span>
+                            使用シーン
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="grid grid-cols-2 gap-2">
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="occasions" value="daily" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                    <span class="ml-2 text-sm">日常使い</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="occasions" value="office" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                    <span class="ml-2 text-sm">オフィス</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="occasions" value="date" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                    <span class="ml-2 text-sm">デート</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="occasions" value="party" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                    <span class="ml-2 text-sm">パーティー</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="occasions" value="formal" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                    <span class="ml-2 text-sm">フォーマル</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="occasions" value="casual" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                    <span class="ml-2 text-sm">カジュアル</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 季節・時間帯 -->
+                    <div class="bg-gradient-to-br from-green-50 to-teal-50 p-6 rounded-xl border border-green-100">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                            <span class="text-2xl mr-3">🌸</span>
+                            おすすめ季節・時間
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">季節</label>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <label class="flex items-center">
+                                        <input type="checkbox" name="seasons" value="spring" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                        <span class="ml-2 text-sm">春</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" name="seasons" value="summer" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                        <span class="ml-2 text-sm">夏</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" name="seasons" value="autumn" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                        <span class="ml-2 text-sm">秋</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" name="seasons" value="winter" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                        <span class="ml-2 text-sm">冬</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">時間帯</label>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <label class="flex items-center">
+                                        <input type="checkbox" name="timeOfDay" value="morning" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                        <span class="ml-2 text-sm">朝</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" name="timeOfDay" value="day" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                        <span class="ml-2 text-sm">昼</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" name="timeOfDay" value="evening" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                        <span class="ml-2 text-sm">夕方</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" name="timeOfDay" value="night" class="text-perfume-purple focus:ring-perfume-purple rounded">
+                                        <span class="ml-2 text-sm">夜</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 購入情報（オプション） -->
+                <div class="bg-gradient-to-br from-orange-50 to-red-50 p-6 rounded-xl border border-orange-100">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                        <span class="text-2xl mr-3">🛍️</span>
+                        購入情報（任意）
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label for="purchasePrice" class="block text-sm font-medium text-gray-700 mb-2">購入価格</label>
+                            <input
+                                type="number"
+                                id="purchasePrice"
+                                name="purchasePrice"
+                                min="0"
+                                max="100000"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-perfume-purple focus:border-transparent"
+                                placeholder="12000"
+                            >
+                        </div>
+                        <div>
+                            <label for="purchaseDate" class="block text-sm font-medium text-gray-700 mb-2">購入日</label>
+                            <input
+                                type="date"
+                                id="purchaseDate"
+                                name="purchaseDate"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-perfume-purple focus:border-transparent"
+                            >
+                        </div>
+                        <div>
+                            <label for="purchaseStore" class="block text-sm font-medium text-gray-700 mb-2">購入店舗</label>
+                            <input
+                                type="text"
+                                id="purchaseStore"
+                                name="purchaseStore"
+                                maxlength="100"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-perfume-purple focus:border-transparent"
+                                placeholder="例：伊勢丹新宿店"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- プライバシー設定 -->
+                <div class="bg-gradient-to-br from-slate-50 to-blue-50 p-6 rounded-xl border border-slate-200">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                        <span class="text-2xl mr-3">🔒</span>
+                        公開設定
+                    </h3>
+                    <div class="space-y-4">
+                        <label class="flex items-start space-x-3 p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-white transition-colors">
+                            <input type="radio" name="privacy" value="public" class="text-perfume-purple focus:ring-perfume-purple mt-1" checked>
+                            <div class="flex-1">
+                                <div class="flex items-center mb-1">
+                                    <span class="font-medium text-gray-900">🌍 公開</span>
+                                    <span class="ml-2 text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">推奨</span>
+                                </div>
+                                <div class="text-sm text-gray-600">すべてのユーザーがレビューを閲覧できます。香水コミュニティの発展に貢献します。</div>
+                            </div>
+                        </label>
+                        
+                        <label class="flex items-start space-x-3 p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-white transition-colors">
+                            <input type="radio" name="privacy" value="followers" class="text-perfume-purple focus:ring-perfume-purple mt-1">
+                            <div class="flex-1">
+                                <div class="flex items-center mb-1">
+                                    <span class="font-medium text-gray-900">👥 フォロワーのみ</span>
+                                </div>
+                                <div class="text-sm text-gray-600">あなたをフォローしているユーザーのみがレビューを閲覧できます。</div>
+                            </div>
+                        </label>
+                        
+                        <label class="flex items-start space-x-3 p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-white transition-colors">
+                            <input type="radio" name="privacy" value="private" class="text-perfume-purple focus:ring-perfume-purple mt-1">
+                            <div class="flex-1">
+                                <div class="flex items-center mb-1">
+                                    <span class="font-medium text-gray-900">🔒 非公開</span>
+                                </div>
+                                <div class="text-sm text-gray-600">あなたのマイページでのみ閲覧可能です。他のユーザーには表示されません。</div>
+                            </div>
+                        </label>
+                    </div>
+                    
+                    <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                        <div class="flex items-start">
+                            <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <div class="text-sm text-blue-800">
+                                <strong>ヒント：</strong> 公開レビューは他のユーザーの香水選びに役立ち、「参考になった」ボタンでポイントが貯まります。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 投稿ボタン -->
+                <div class="flex justify-center pt-6">
+                    <div class="flex space-x-4">
+                        <button
+                            type="button"
+                            onclick="window.history.back()"
+                            class="px-8 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+                        >
+                            キャンセル
+                        </button>
+                        <button
+                            type="submit"
+                            class="px-8 py-3 bg-perfume-purple text-white rounded-lg font-medium hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            id="submitBtn"
+                            disabled
+                        >
+                            レビューを投稿
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- フッター -->
+    <footer class="bg-gray-900 text-white py-12 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- 会社情報 -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Memscent</h3>
+                    <p class="text-gray-300 mb-4">
+                        あなたの香りの記憶を大切にする、香水レビューコミュニティサイトです。
+                    </p>
+                </div>
+
+                <!-- リンク1 -->
+                <div>
+                    <h4 class="font-semibold mb-4">サービス</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white">香水検索</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">レビュー投稿</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">ランキング</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">おすすめ機能</a></li>
+                    </ul>
+                </div>
+
+                <!-- リンク2 -->
+                <div>
+                    <h4 class="font-semibold mb-4">コミュニティ</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white">フォーラム</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">イベント</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">専門家コラム</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">Q&A</a></li>
+                    </ul>
+                </div>
+
+                <!-- リンク3 -->
+                <div>
+                    <h4 class="font-semibold mb-4">サポート</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white">ヘルプセンター</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">お問い合わせ</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">プライバシーポリシー</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">利用規約</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+                <p class="text-gray-300">&copy; 2025 Memscent. All rights reserved. あなたの香りの記憶を大切に。</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 評価機能を初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeRatingSystem();
+            initializeFormValidation();
+            initializeCharacterCount();
+            initializePrivacySettings();
+        });
+
+        function initializePrivacySettings() {
+            const privacyOptions = document.querySelectorAll('input[name="privacy"]');
+            
+            privacyOptions.forEach(option => {
+                option.addEventListener('change', function() {
+                    updatePrivacyDisplay(this.value);
+                });
+            });
+            
+            // 初期表示
+            const selectedPrivacy = document.querySelector('input[name="privacy"]:checked');
+            if (selectedPrivacy) {
+                updatePrivacyDisplay(selectedPrivacy.value);
+            }
+        }
+
+        function updatePrivacyDisplay(privacyLevel) {
+            // プライバシーレベルに応じた表示更新
+            const submitBtn = document.getElementById('submitBtn');
+            
+            switch(privacyLevel) {
+                case 'public':
+                    submitBtn.textContent = '公開レビューを投稿';
+                    break;
+                case 'followers':
+                    submitBtn.textContent = 'フォロワー限定で投稿';
+                    break;
+                case 'private':
+                    submitBtn.textContent = '非公開で投稿';
+                    break;
+            }
+        }
+
+        function initializeRatingSystem() {
+            // すべての評価エリアに対してクリックイベントを設定
+            document.querySelectorAll('.rating-area').forEach(ratingArea => {
+                const stars = ratingArea.querySelectorAll('.star');
+                const input = ratingArea.querySelector('input[type="hidden"]');
+                
+                stars.forEach((star, index) => {
+                    star.addEventListener('click', () => {
+                        const rating = index + 1;
+                        input.value = rating;
+                        
+                        // 星の表示を更新
+                        updateStars(stars, rating);
+                        
+                        // 総合評価を更新
+                        updateOverallRating();
+                        
+                        // フォームバリデーションを更新
+                        validateForm();
+                    });
+                    
+                    star.addEventListener('mouseenter', () => {
+                        updateStars(stars, index + 1);
+                    });
+                });
+                
+                ratingArea.addEventListener('mouseleave', () => {
+                    const currentRating = parseInt(input.value) || 0;
+                    updateStars(stars, currentRating);
+                });
+            });
+        }
+
+        function updateStars(stars, rating) {
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.add('text-yellow-400');
+                    star.classList.remove('text-gray-300');
+                } else {
+                    star.classList.add('text-gray-300');
+                    star.classList.remove('text-yellow-400');
+                }
+            });
+        }
+
+        function updateOverallRating() {
+            const ratings = [
+                parseInt(document.querySelector('input[name="fragrance_rating"]').value) || 0,
+                parseInt(document.querySelector('input[name="longevity_rating"]').value) || 0,
+                parseInt(document.querySelector('input[name="sillage_rating"]').value) || 0,
+                parseInt(document.querySelector('input[name="value_rating"]').value) || 0
+            ];
+            
+            const validRatings = ratings.filter(r => r > 0);
+            if (validRatings.length === 0) return;
+            
+            const average = validRatings.reduce((sum, rating) => sum + rating, 0) / validRatings.length;
+            const overallRating = Math.round(average * 10) / 10;
+            
+            // 総合評価を表示
+            document.getElementById('overall-rating').textContent = overallRating.toFixed(1);
+            
+            // 総合評価の星を更新
+            const overallStars = document.querySelectorAll('#overall-stars .star');
+            updateStars(overallStars, Math.round(average));
+        }
+
+        function initializeCharacterCount() {
+            // タイトル文字数カウント
+            const titleInput = document.getElementById('reviewTitle');
+            const titleCount = document.getElementById('title-count');
+            
+            if (titleInput && titleCount) {
+                titleInput.addEventListener('input', function() {
+                    const count = this.value.length;
+                    titleCount.textContent = count;
+                    
+                    if (count > 100) {
+                        titleCount.classList.add('text-red-500');
+                    } else {
+                        titleCount.classList.remove('text-red-500');
+                    }
+                    
+                    validateForm();
+                });
+            }
+
+            // レビューテキスト文字数カウント
+            const textInput = document.getElementById('reviewText');
+            const textCount = document.getElementById('text-count');
+            
+            if (textInput && textCount) {
+                textInput.addEventListener('input', function() {
+                    const count = this.value.length;
+                    textCount.textContent = count;
+                    
+                    if (count > 2000) {
+                        textCount.classList.add('text-red-500');
+                    } else {
+                        textCount.classList.remove('text-red-500');
+                    }
+                    
+                    validateForm();
+                });
+            }
+        }
+
+        function initializeFormValidation() {
+            const form = document.getElementById('reviewForm');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            if (form && submitBtn) {
+                // フォーム送信処理
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    if (validateForm()) {
+                        // プライバシー設定を取得
+                        const privacyLevel = document.querySelector('input[name="privacy"]:checked').value;
+                        
+                        // 送信処理のシミュレーション
+                        submitBtn.disabled = true;
+                        submitBtn.textContent = '投稿中...';
+                        
+                        // プライバシーレベルに応じたメッセージ
+                        let successMessage = 'レビューが投稿されました！';
+                        switch(privacyLevel) {
+                            case 'public':
+                                successMessage = '公開レビューが投稿されました！他のユーザーに表示されます。';
+                                break;
+                            case 'followers':
+                                successMessage = 'フォロワー限定レビューが投稿されました！フォロワーのみに表示されます。';
+                                break;
+                            case 'private':
+                                successMessage = '非公開レビューが投稿されました！マイページでのみ確認できます。';
+                                break;
+                        }
+                        
+                        setTimeout(() => {
+                            alert(successMessage);
+                            // 実際の実装では、ここでAPIに送信し、適切なページに遷移
+                            window.location.href = 'perfume-detail.html';
+                        }, 2000);
+                    }
+                });
+            }
+        }
+
+        function validateForm() {
+            const titleInput = document.getElementById('reviewTitle');
+            const textInput = document.getElementById('reviewText');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            if (!titleInput || !textInput || !submitBtn) return false;
+            
+            const title = titleInput.value.trim();
+            const text = textInput.value.trim();
+            
+            // 必須項目のチェック
+            const hasTitle = title.length > 0 && title.length <= 100;
+            const hasText = text.length > 0 && text.length <= 2000;
+            
+            // 少なくとも1つの評価があるかチェック
+            const hasRating = [
+                parseInt(document.querySelector('input[name="fragrance_rating"]')?.value) || 0,
+                parseInt(document.querySelector('input[name="longevity_rating"]')?.value) || 0,
+                parseInt(document.querySelector('input[name="sillage_rating"]')?.value) || 0,
+                parseInt(document.querySelector('input[name="value_rating"]')?.value) || 0
+            ].some(rating => rating > 0);
+            
+            const isValid = hasTitle && hasText && hasRating;
+            
+            submitBtn.disabled = !isValid;
+            
+            return isValid;
+        }
+
+        // 価格入力の制限
+        const priceInput = document.getElementById('purchasePrice');
+        if (priceInput) {
+            priceInput.addEventListener('input', function() {
+                const value = parseInt(this.value);
+                if (value > 100000) {
+                    this.value = 100000;
+                }
+                if (value < 0) {
+                    this.value = 0;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
