@@ -89,15 +89,6 @@
             border-radius: 1px;
         }
         
-        .pyramid-divider.top-start {
-            top: 20px;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 1);
-            box-shadow: 0 0 12px rgba(255,255,255,0.8), 0 2px 8px rgba(0,0,0,0.2);
-        }
-        
         .pyramid-divider.top-divider {
             top: 150px;
             width: 160px;
@@ -157,7 +148,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /* ボックススタイル削除 - クリーンなデザインに */
             background: none;
             border: none;
             min-height: 50px;
@@ -214,7 +204,30 @@
             transform: translateY(-3px) scale(1.05);
         }
         
-        /* 星評価システム - 0.5刻み対応 */
+        .note-label {
+            font-weight: bold;
+            color: #8B4B7C;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .note-description {
+            color: #555;
+            font-size: 0.75rem;
+            line-height: 1.3;
+            max-width: 120px;
+            margin-bottom: 2px;
+        }
+        
+        .note-duration {
+            color: #888;
+            font-size: 0.7rem;
+            font-style: italic;
+            opacity: 0.8;
+        }
+        
+        /* 星評価システム */
         .star-rating {
             display: inline-flex;
             align-items: center;
@@ -237,102 +250,71 @@
         }
         
         .star.filled svg {
-            fill: #fbbf24;
-            stroke: #f59e0b;
+            fill: #D4A574;
+            stroke: #D4A574;
         }
         
-        .star.half-filled svg {
-            fill: url(#half-fill);
-            stroke: #f59e0b;
+        .star.partial-filled svg {
+            fill: url(#star-fill-70);
+            stroke: #D4A574;
         }
         
-        /* ピラミッドセクション */
-        .pyramid-section {
-            position: absolute;
-            left: 0;
-            right: 0;
+        /* モバイル用の簡略化された香調ピラミッド */
+        .mobile-pyramid {
+            display: none;
+        }
+        
+        .mobile-pyramid .note-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .mobile-pyramid .note-section.top {
+            border-left-color: #fbbf24;
+        }
+        
+        .mobile-pyramid .note-section.middle {
+            border-left-color: #ec4899;
+        }
+        
+        .mobile-pyramid .note-section.base {
+            border-left-color: #8b5cf6;
+        }
+        
+        .mobile-pyramid .note-title {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
             display: flex;
             align-items: center;
-            z-index: 10;
+            gap: 0.5rem;
         }
         
-        .pyramid-top {
-            top: 70px;
-            height: 80px;
-        }
-        
-        .pyramid-middle {
-            top: 165px;
-            height: 80px;
-        }
-        
-        .pyramid-base {
-            top: 290px;
-            height: 100px;
-        }
-        
-        .pyramid-left {
-            flex: 1;
-            text-align: right;
-            padding-right: 20px;
+        .mobile-pyramid .note-ingredients {
             display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
         }
         
-        .pyramid-right {
-            flex: 1;
-            text-align: left;
-            padding-left: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: flex-start;
+        .mobile-pyramid .ingredient-tag {
+            background: #f3f4f6;
+            color: #374151;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border: 1px solid #e5e7eb;
         }
         
-        .pyramid-center {
-            width: 240px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: none;
-            border: none;
-            border-radius: 0;
-            backdrop-filter: none;
-            min-height: 60px;
-        }
-        
-        .pyramid-ingredients {
-            display: flex;
-            gap: 8px;
-            font-size: 2rem;
-            flex-wrap: nowrap;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .note-label {
-            font-weight: bold;
-            color: #8B4B7C;
-            font-size: 0.9rem;
-            margin-bottom: 4px;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }
-        
-        .note-description {
-            color: #555;
+        .mobile-pyramid .note-info {
             font-size: 0.75rem;
-            line-height: 1.3;
-            max-width: 120px;
-            margin-bottom: 2px;
-        }
-        
-        .note-duration {
-            color: #888;
-            font-size: 0.7rem;
-            font-style: italic;
-            opacity: 0.8;
+            color: #6b7280;
+            line-height: 1.4;
         }
         
         /* レーダーチャート風の評価 */
@@ -426,6 +408,76 @@
             background: rgba(255, 255, 255, 0.3);
         }
         
+        /* モバイルメニュー */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 80%;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            transition: left 0.3s ease;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .mobile-menu.active {
+            left: 0;
+        }
+        
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9998;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .mobile-menu-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .mobile-menu-close {
+            margin-left: auto;
+            padding: 0.5rem;
+            border: none;
+            background: none;
+            font-size: 1.5rem;
+            color: #6b7280;
+        }
+        
+        .mobile-menu-nav {
+            padding: 1rem;
+        }
+        
+        .mobile-menu-nav a {
+            display: block;
+            padding: 0.75rem 0;
+            color: #374151;
+            text-decoration: none;
+            border-bottom: 1px solid #f3f4f6;
+            font-weight: 500;
+        }
+        
+        .mobile-menu-nav a:hover {
+            color: #8B4B7C;
+        }
+        
         /* レスポンシブ対応 */
         @media (max-width: 768px) {
             /* ヘッダーの調整 */
@@ -452,16 +504,13 @@
                 margin: 0 auto;
             }
             
-            /* 香調ピラミッドの調整 */
+            /* 香調ピラミッドの切り替え */
             .pyramid-container {
-                max-width: 100%;
-                height: 400px;
-                padding: 15px;
+                display: none; /* デスクトップ版を非表示 */
             }
             
-            .pyramid-triangle {
-                width: 300px;
-                height: 300px;
+            .mobile-pyramid {
+                display: block; /* モバイル版を表示 */
             }
             
             /* タブの調整 */
@@ -508,16 +557,6 @@
         
         @media (max-width: 640px) {
             /* さらに小さい画面での調整 */
-            .pyramid-container {
-                height: 350px;
-                padding: 10px;
-            }
-            
-            .pyramid-triangle {
-                width: 250px;
-                height: 250px;
-            }
-            
             .stats-grid {
                 grid-template-columns: 1fr;
                 gap: 0.75rem;
@@ -546,16 +585,6 @@
             /* 極小画面での調整 */
             .container {
                 padding: 0.5rem;
-            }
-            
-            .pyramid-container {
-                height: 300px;
-                margin: 1rem 0;
-            }
-            
-            .pyramid-triangle {
-                width: 200px;
-                height: 200px;
             }
             
             .section-title {
@@ -628,6 +657,11 @@
                     
                     <!-- ユーザーメニュー -->
                     <div class="flex items-center space-x-3">
+                        <a href="user-profile.html" class="p-2 text-gray-600 hover:text-perfume-purple transition-colors" title="マイページ">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                        </a>
                         <a href="login.html" class="text-gray-600 hover:text-perfume-purple font-medium transition-colors whitespace-nowrap">
                             ログイン
                         </a>
@@ -637,7 +671,7 @@
                     </div>
                     
                     <!-- モバイルメニューボタン -->
-                    <button class="lg:hidden p-2">
+                    <button class="lg:hidden p-2" onclick="toggleMobileMenu()">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
@@ -646,14 +680,28 @@
             </div>
         </div>
     </header>
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
-                </div>
-            </div>
+
+    <!-- モバイルメニュー -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <h2 class="text-lg font-bold text-perfume-purple">メニュー</h2>
+            <button class="mobile-menu-close" onclick="closeMobileMenu()">✕</button>
         </div>
-    </header>
+        <nav class="mobile-menu-nav">
+            <a href="index.html">ホーム</a>
+            <a href="search-results.html">香水を探す</a>
+            <a href="perfume-register.html">香水を登録</a>
+            <a href="#">レビュー</a>
+            <a href="#">ランキング</a>
+            <a href="#">コミュニティ</a>
+            <div class="border-t border-gray-200 mt-4 pt-4">
+                <a href="user-profile.html">マイページ</a>
+                <a href="login.html">ログイン</a>
+                <a href="register.html">新規登録</a>
+            </div>
+        </nav>
+    </div>
 
     <!-- パンくずリスト -->
     <div class="bg-white border-b">
@@ -1016,8 +1064,8 @@
                     <!-- 香調タブ -->
                     <div id="notes-content" class="tab-content p-6 hidden">
                         <div class="space-y-8">
-                            <!-- 香調ピラミッド -->
-                            <div>
+                            <!-- 香調ピラミッド（デスクトップ版） -->
+                            <div class="hidden md:block">
                                 <h3 class="text-lg font-semibold text-gray-900 mb-6 text-center">香調ピラミッド</h3>
                                 <div class="pyramid-container mb-8">
                                     <!-- 三角形の背景 -->
@@ -1119,6 +1167,59 @@
                                                 <p class="text-sm text-gray-600">バニラとサンダルウッドの温かみのある香りが、ホワイトムスクと調和して上品な余韻を演出</p>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 香調ピラミッド（モバイル版） -->
+                            <div class="mobile-pyramid md:hidden">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-6 text-center">香調ピラミッド</h3>
+                                
+                                <!-- トップノート -->
+                                <div class="note-section top">
+                                    <div class="note-title">
+                                        🍊 トップノート
+                                        <span class="text-xs text-gray-500">(5〜15分)</span>
+                                    </div>
+                                    <div class="note-ingredients">
+                                        <span class="ingredient-tag">ブラッドオレンジ</span>
+                                        <span class="ingredient-tag">レモン</span>
+                                        <span class="ingredient-tag">ピンクペッパー</span>
+                                    </div>
+                                    <div class="note-info">
+                                        フレッシュなシトラスの輝きとスパイシーなピンクペッパーが最初に香る、爽やかで印象的な立ち上がり。
+                                    </div>
+                                </div>
+                                
+                                <!-- ミドルノート -->
+                                <div class="note-section middle">
+                                    <div class="note-title">
+                                        🌸 ミドルノート
+                                        <span class="text-xs text-gray-500">(30分〜2時間)</span>
+                                    </div>
+                                    <div class="note-ingredients">
+                                        <span class="ingredient-tag">グラース産ローズ</span>
+                                        <span class="ingredient-tag">ピオニー</span>
+                                        <span class="ingredient-tag">ジャスミン</span>
+                                    </div>
+                                    <div class="note-info">
+                                        香水の中心となる華やかなフローラルブーケ。上品で女性らしい印象を与える、エレガントな花の香り。
+                                    </div>
+                                </div>
+                                
+                                <!-- ベースノート -->
+                                <div class="note-section base">
+                                    <div class="note-title">
+                                        🪵 ベースノート
+                                        <span class="text-xs text-gray-500">(2時間以降)</span>
+                                    </div>
+                                    <div class="note-ingredients">
+                                        <span class="ingredient-tag">バニラ</span>
+                                        <span class="ingredient-tag">サンダルウッド</span>
+                                        <span class="ingredient-tag">ホワイトムスク</span>
+                                    </div>
+                                    <div class="note-info">
+                                        温かみのあるバニラとウッディなサンダルウッドが、ホワイトムスクと調和して上品な余韻を演出。
                                     </div>
                                 </div>
                             </div>
@@ -1579,16 +1680,97 @@
             window.location.href = `search-results.html?q=${encodeURIComponent(searchTerm)}`;
         }
 
-        // 価格比較リンク
-        function openPriceComparison() {
-            // 実際の実装では価格比較サイトのAPIを呼び出し
-            alert('価格比較サイトへのリンク機能はここに実装されます');
+        // モバイルメニュー機能
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const overlay = document.getElementById('mobileMenuOverlay');
+            menu.classList.toggle('active');
+            overlay.classList.toggle('active');
+            document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : '';
         }
 
-        // レビュー投稿
-        function openReviewForm() {
-            // 実際の実装ではレビュー投稿フォームを表示
-            window.location.href = 'review-post.html';
+        function closeMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const overlay = document.getElementById('mobileMenuOverlay');
+            menu.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // ESCキーでメニューを閉じる
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeMobileMenu();
+            }
+        });
+
+        // コレクション機能
+        let currentCollection = null;
+
+        function toggleCollection(type) {
+            const buttons = ['have', 'want', 'had'];
+            const statusElement = document.getElementById('collection-status');
+            const detailsElement = document.getElementById('collection-details');
+            
+            // 他のボタンの選択を解除
+            buttons.forEach(btn => {
+                const button = document.getElementById(`collection-${btn}`);
+                if (btn === type) {
+                    if (currentCollection === type) {
+                        // 同じボタンをクリックした場合は解除
+                        button.classList.remove('ring-2', 'ring-offset-2');
+                        button.classList.remove('ring-green-500', 'ring-blue-500', 'ring-purple-500');
+                        currentCollection = null;
+                        statusElement.textContent = 'コレクションに追加されていません';
+                        detailsElement.classList.add('hidden');
+                    } else {
+                        // 新しい選択
+                        button.classList.add('ring-2', 'ring-offset-2');
+                        if (type === 'have') button.classList.add('ring-green-500');
+                        if (type === 'want') button.classList.add('ring-blue-500');
+                        if (type === 'had') button.classList.add('ring-purple-500');
+                        currentCollection = type;
+                        updateCollectionStatus(type);
+                        showCollectionDetails(type);
+                    }
+                } else {
+                    button.classList.remove('ring-2', 'ring-offset-2');
+                    button.classList.remove('ring-green-500', 'ring-blue-500', 'ring-purple-500');
+                }
+            });
+        }
+
+        function updateCollectionStatus(type) {
+            const statusElement = document.getElementById('collection-status');
+            const statusTexts = {
+                have: '✅ 持っているリストに追加されました',
+                want: '💙 欲しいリストに追加されました',
+                had: '🕰️ 使ったことがあるリストに追加されました'
+            };
+            statusElement.textContent = statusTexts[type];
+        }
+
+        function showCollectionDetails(type) {
+            const detailsElement = document.getElementById('collection-details');
+            const allDetails = ['have-details', 'want-details', 'had-details'];
+            
+            // すべての詳細フォームを非表示
+            allDetails.forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            
+            // 選択されたフォームを表示
+            document.getElementById(`${type}-details`).classList.remove('hidden');
+            detailsElement.classList.remove('hidden');
+        }
+
+        function closeCollectionDetails() {
+            document.getElementById('collection-details').classList.add('hidden');
+        }
+
+        function saveCollectionDetails() {
+            alert('コレクション情報が保存されました！');
+            closeCollectionDetails();
         }
 
         // 初期表示時は概要タブをアクティブに

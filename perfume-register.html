@@ -161,6 +161,118 @@
             background: linear-gradient(135deg, rgba(139, 75, 124, 0.08) 0%, rgba(212, 165, 116, 0.08) 100%);
         }
         
+        /* モバイル用の簡略化された香調ピラミッド */
+        .mobile-pyramid {
+            display: none;
+        }
+        
+        .mobile-pyramid .note-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .mobile-pyramid .note-section.top {
+            border-left-color: #fbbf24;
+        }
+        
+        .mobile-pyramid .note-section.middle {
+            border-left-color: #ec4899;
+        }
+        
+        .mobile-pyramid .note-section.base {
+            border-left-color: #8b5cf6;
+        }
+        
+        .mobile-pyramid .note-title {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .mobile-pyramid .note-info {
+            font-size: 0.875rem;
+            color: #6b7280;
+            line-height: 1.4;
+            margin-bottom: 0.75rem;
+        }
+        
+        /* モバイルメニュー */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 80%;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            transition: left 0.3s ease;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .mobile-menu.active {
+            left: 0;
+        }
+        
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9998;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .mobile-menu-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .mobile-menu-close {
+            margin-left: auto;
+            padding: 0.5rem;
+            border: none;
+            background: none;
+            font-size: 1.5rem;
+            color: #6b7280;
+        }
+        
+        .mobile-menu-nav {
+            padding: 1rem;
+        }
+        
+        .mobile-menu-nav a {
+            display: block;
+            padding: 0.75rem 0;
+            color: #374151;
+            text-decoration: none;
+            border-bottom: 1px solid #f3f4f6;
+            font-weight: 500;
+        }
+        
+        .mobile-menu-nav a:hover {
+            color: #8B4B7C;
+        }
+        
         /* レスポンシブ対応 */
         @media (max-width: 768px) {
             /* ヘッダーの調整 */
@@ -188,22 +300,11 @@
             
             /* 香調ピラミッドの調整 */
             .pyramid-container {
-                max-width: 100%;
-                height: 400px;
-                padding: 15px;
+                display: none; /* デスクトップ版を非表示 */
             }
             
-            .pyramid-triangle {
-                width: 300px;
-                height: 300px;
-            }
-            
-            .pyramid-divider.top-divider {
-                width: 200px;
-            }
-            
-            .pyramid-divider.middle-divider {
-                width: 240px;
+            .mobile-pyramid {
+                display: block; /* モバイル版を表示 */
             }
             
             /* ボタンの調整 */
@@ -219,14 +320,16 @@
         
         @media (max-width: 640px) {
             /* さらに小さい画面での調整 */
-            .pyramid-container {
-                height: 350px;
-                padding: 10px;
+            .form-container {
+                padding: 0.5rem;
             }
             
-            .pyramid-triangle {
-                width: 250px;
-                height: 250px;
+            .mobile-pyramid .note-section {
+                padding: 0.75rem;
+            }
+            
+            .mobile-pyramid .note-title {
+                font-size: 0.9rem;
             }
             
             .section-title {
@@ -289,24 +392,50 @@
                     <a href="index.html" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors">ホーム</a>
                     <a href="search-results.html" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors">香水を探す</a>
                     <a href="#" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors">レビュー</a>
-                    <a href="user-profile.html" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors">マイページ</a>
+                    <a href="user-profile.html" class="p-2 text-gray-700 hover:text-perfume-purple transition-colors" title="マイページ">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                    </a>
                 </nav>
                 
                 <!-- ユーザーメニュー -->
                 <div class="flex items-center space-x-4">
-                    <button class="p-2 text-gray-600 hover:text-perfume-purple">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"></path>
-                        </svg>
-                    </button>
                     <button onclick="window.location.href='login.html'" class="bg-perfume-purple text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-opacity-90 transition-colors">
                         ログイン
+                    </button>
+                    
+                    <!-- モバイルメニューボタン -->
+                    <button class="md:hidden p-2 text-gray-600 hover:text-perfume-purple transition-colors" onclick="toggleMobileMenu()">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
                     </button>
                 </div>
             </div>
         </div>
     </header>
+
+    <!-- モバイルメニュー -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <h2 class="text-lg font-bold text-perfume-purple">メニュー</h2>
+            <button class="mobile-menu-close" onclick="closeMobileMenu()">✕</button>
+        </div>
+        <nav class="mobile-menu-nav">
+            <a href="index.html">ホーム</a>
+            <a href="search-results.html">香水を探す</a>
+            <a href="perfume-register.html">香水を登録</a>
+            <a href="#">レビュー</a>
+            <a href="#">ランキング</a>
+            <a href="#">コミュニティ</a>
+            <div class="border-t border-gray-200 mt-4 pt-4">
+                <a href="login.html">ログイン</a>
+                <a href="register.html">新規登録</a>
+            </div>
+        </nav>
+    </div>
 
     <!-- パンくずリスト -->
     <div class="bg-white border-b">
@@ -468,8 +597,8 @@
                     香調ピラミッド
                 </h2>
 
-                <!-- ピラミッド視覚表示 -->
-                <div class="text-center mb-8">
+                <!-- ピラミッド視覚表示（デスクトップ版） -->
+                <div class="text-center mb-8 hidden md:block">
                     <div class="pyramid-container">
                         <!-- 三角形の背景 -->
                         <div class="pyramid-triangle"></div>
@@ -500,6 +629,39 @@
                                 <div class="note-label">ベースノート</div>
                                 <div class="note-description">深みのある持続する香り</div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ピラミッド視覚表示（モバイル版） -->
+                <div class="mobile-pyramid md:hidden mb-8">
+                    <!-- トップノート -->
+                    <div class="note-section top">
+                        <div class="note-title">
+                            🍊 トップノート
+                        </div>
+                        <div class="note-info">
+                            最初に広がる軽やかな香り（5〜15分ほど香る）
+                        </div>
+                    </div>
+                    
+                    <!-- ミドルノート -->
+                    <div class="note-section middle">
+                        <div class="note-title">
+                            🌸 ミドルノート
+                        </div>
+                        <div class="note-info">
+                            香水の核となる華やかな香り（30分〜2時間ほど香る）
+                        </div>
+                    </div>
+                    
+                    <!-- ベースノート -->
+                    <div class="note-section base">
+                        <div class="note-title">
+                            🪵 ベースノート
+                        </div>
+                        <div class="note-info">
+                            深みのある持続する香り（2時間以降も最後まで香る）
                         </div>
                     </div>
                 </div>
@@ -1083,6 +1245,30 @@
                 }
             });
         }
+        
+        // モバイルメニュー機能
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const overlay = document.getElementById('mobileMenuOverlay');
+            menu.classList.toggle('active');
+            overlay.classList.toggle('active');
+            document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : '';
+        }
+
+        function closeMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const overlay = document.getElementById('mobileMenuOverlay');
+            menu.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // ESCキーでメニューを閉じる
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeMobileMenu();
+            }
+        });
     </script>
 </body>
 </html>
