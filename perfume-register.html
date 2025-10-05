@@ -41,107 +41,6 @@
             box-sizing: border-box; /* ボックスサイジングの統一 */
         }
         
-        /* 香調ピラミッド用スタイル */
-        .pyramid-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            height: 500px;
-            margin: 0 auto;
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        
-        .pyramid-triangle {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 400px;
-            height: 400px;
-            background: linear-gradient(135deg, 
-                rgba(139, 75, 124, 0.15) 0%,
-                rgba(212, 165, 116, 0.12) 30%,
-                rgba(139, 75, 124, 0.08) 60%,
-                rgba(212, 165, 116, 0.05) 100%);
-            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-            border-radius: 8px 8px 0 0;
-            box-shadow: 
-                0 20px 60px rgba(139, 75, 124, 0.15),
-                inset 0 1px 0 rgba(255,255,255,0.2),
-                inset 0 -1px 0 rgba(139, 75, 124, 0.1);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(212, 165, 116, 0.2);
-        }
-        
-        .pyramid-divider {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            height: 2px;
-            background: linear-gradient(90deg, 
-                transparent 0%, 
-                rgba(212, 165, 116, 0.8) 20%, 
-                rgba(212, 165, 116, 1) 50%, 
-                rgba(212, 165, 116, 0.8) 80%, 
-                transparent 100%);
-            box-shadow: 
-                0 0 20px rgba(212, 165, 116, 0.6),
-                0 1px 0 rgba(255,255,255,0.3),
-                0 -1px 0 rgba(139, 75, 124, 0.2);
-            z-index: 15;
-            border-radius: 1px;
-        }
-        
-        .pyramid-divider.top-divider {
-            top: 150px;
-            width: 160px;
-        }
-        
-        .pyramid-divider.middle-divider {
-            top: 280px;
-            width: 280px;
-        }
-        
-        .pyramid-section {
-            position: absolute;
-            left: 0;
-            right: 0;
-            display: flex;
-            align-items: center;
-            z-index: 10;
-        }
-        
-        .pyramid-top {
-            top: 70px;
-            height: 80px;
-        }
-        
-        .pyramid-middle {
-            top: 165px;
-            height: 80px;
-        }
-        
-        .pyramid-base {
-            top: 290px;
-            height: 100px;
-        }
-        
-        .pyramid-center {
-            width: 220px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: none;
-            border: none;
-            min-height: 50px;
-            margin: 0 auto;
-            text-align: center;
-        }
-        
         .note-label {
             font-weight: 600;
             color: #8B4B7C;
@@ -170,48 +69,6 @@
         .upload-area:hover {
             border-color: #8B4B7C;
             background: linear-gradient(135deg, rgba(139, 75, 124, 0.08) 0%, rgba(212, 165, 116, 0.08) 100%);
-        }
-        
-        /* モバイル用の簡略化された香調ピラミッド */
-        .mobile-pyramid {
-            display: none;
-        }
-        
-        .mobile-pyramid .note-section {
-            background: white;
-            border-radius: 12px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-left: 4px solid;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .mobile-pyramid .note-section.top {
-            border-left-color: #fbbf24;
-        }
-        
-        .mobile-pyramid .note-section.middle {
-            border-left-color: #ec4899;
-        }
-        
-        .mobile-pyramid .note-section.base {
-            border-left-color: #8b5cf6;
-        }
-        
-        .mobile-pyramid .note-title {
-            font-weight: 600;
-            color: #374151;
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .mobile-pyramid .note-info {
-            font-size: 0.875rem;
-            color: #6b7280;
-            line-height: 1.4;
-            margin-bottom: 0.75rem;
         }
         
         /* モバイルメニュー */
@@ -313,15 +170,6 @@
             .form-grid {
                 grid-template-columns: 1fr;
                 gap: 1rem;
-            }
-            
-            /* 香調ピラミッドの調整 */
-            .pyramid-container {
-                display: none; /* デスクトップ版を非表示 */
-            }
-            
-            .mobile-pyramid {
-                display: block; /* モバイル版を表示 */
             }
             
             /* ボタンの調整 */
@@ -607,81 +455,12 @@
                 </div>
             </div>
 
-            <!-- 香調ピラミッド -->
+            <!-- 香調 -->
             <div class="bg-white rounded-xl shadow-lg p-6">
                 <h2 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
                     <span class="text-2xl mr-3">🔺</span>
-                    香調ピラミッド
+                    香調
                 </h2>
-
-                <!-- ピラミッド視覚表示（デスクトップ版） -->
-                <div class="text-center mb-8 hidden md:block">
-                    <div class="pyramid-container">
-                        <!-- 三角形の背景 -->
-                        <div class="pyramid-triangle"></div>
-                        
-                        <!-- 区切り線 -->
-                        <div class="pyramid-divider top-divider"></div>
-                        <div class="pyramid-divider middle-divider"></div>
-                        
-                        <!-- トップノート -->
-                        <div class="pyramid-section pyramid-top">
-                            <div class="pyramid-center">
-                                <div class="note-label">トップノート</div>
-                                <div class="note-description">最初に広がる軽やかな香り</div>
-                            </div>
-                        </div>
-                        
-                        <!-- ミドルノート -->
-                        <div class="pyramid-section pyramid-middle">
-                            <div class="pyramid-center">
-                                <div class="note-label">ミドルノート</div>
-                                <div class="note-description">香水の核となる華やかな香り</div>
-                            </div>
-                        </div>
-                        
-                        <!-- ベースノート -->
-                        <div class="pyramid-section pyramid-base">
-                            <div class="pyramid-center">
-                                <div class="note-label">ベースノート</div>
-                                <div class="note-description">深みのある持続する香り</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- ピラミッド視覚表示（モバイル版） -->
-                <div class="mobile-pyramid md:hidden mb-8">
-                    <!-- トップノート -->
-                    <div class="note-section top">
-                        <div class="note-title">
-                            🍊 トップノート
-                        </div>
-                        <div class="note-info">
-                            最初に広がる軽やかな香り（5〜15分ほど香る）
-                        </div>
-                    </div>
-                    
-                    <!-- ミドルノート -->
-                    <div class="note-section middle">
-                        <div class="note-title">
-                            🌸 ミドルノート
-                        </div>
-                        <div class="note-info">
-                            香水の核となる華やかな香り（30分〜2時間ほど香る）
-                        </div>
-                    </div>
-                    
-                    <!-- ベースノート -->
-                    <div class="note-section base">
-                        <div class="note-title">
-                            🪵 ベースノート
-                        </div>
-                        <div class="note-info">
-                            深みのある持続する香り（2時間以降も最後まで香る）
-                        </div>
-                    </div>
-                </div>
 
                 <div class="space-y-6">
                     <!-- トップノート -->
@@ -732,87 +511,6 @@
                                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-perfume-purple focus:border-transparent"
                             >
                             <div id="base-notes-tags" class="flex flex-wrap gap-2 min-h-[2rem]"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 基本分類 -->
-            <div class="bg-white rounded-xl shadow-lg p-6">
-                <h2 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
-                    <span class="text-2xl mr-3">🏷️</span>
-                    基本分類
-                </h2>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- 対象性別 -->
-                    <div class="gradient-card p-4 rounded-lg">
-                        <h3 class="font-medium text-gray-900 mb-3 flex items-center">
-                            <span class="mr-2">👤</span>対象性別
-                        </h3>
-                        <div class="space-y-2">
-                            <label class="flex items-center">
-                                <input type="checkbox" name="gender" value="women" class="text-perfume-purple focus:ring-perfume-purple rounded">
-                                <span class="ml-2 text-sm">女性向け</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" name="gender" value="men" class="text-perfume-purple focus:ring-perfume-purple rounded">
-                                <span class="ml-2 text-sm">男性向け</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" name="gender" value="unisex" class="text-perfume-purple focus:ring-perfume-purple rounded">
-                                <span class="ml-2 text-sm">ユニセックス</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- 適用季節 -->
-                    <div class="gradient-card p-4 rounded-lg">
-                        <h3 class="font-medium text-gray-900 mb-3 flex items-center">
-                            <span class="mr-2">🌸</span>適用季節
-                        </h3>
-                        <div class="space-y-2">
-                            <label class="flex items-center">
-                                <input type="checkbox" name="season" value="spring" class="text-perfume-purple focus:ring-perfume-purple rounded">
-                                <span class="ml-2 text-sm">春</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" name="season" value="summer" class="text-perfume-purple focus:ring-perfume-purple rounded">
-                                <span class="ml-2 text-sm">夏</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" name="season" value="autumn" class="text-perfume-purple focus:ring-perfume-purple rounded">
-                                <span class="ml-2 text-sm">秋</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" name="season" value="winter" class="text-perfume-purple focus:ring-perfume-purple rounded">
-                                <span class="ml-2 text-sm">冬</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- 時間帯 -->
-                    <div class="gradient-card p-4 rounded-lg">
-                        <h3 class="font-medium text-gray-900 mb-3 flex items-center">
-                            <span class="mr-2">🕐</span>時間帯
-                        </h3>
-                        <div class="space-y-2">
-                            <label class="flex items-center">
-                                <input type="checkbox" name="timeOfDay" value="morning" class="text-perfume-purple focus:ring-perfume-purple rounded">
-                                <span class="ml-2 text-sm">朝</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" name="timeOfDay" value="day" class="text-perfume-purple focus:ring-perfume-purple rounded">
-                                <span class="ml-2 text-sm">昼</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" name="timeOfDay" value="evening" class="text-perfume-purple focus:ring-perfume-purple rounded">
-                                <span class="ml-2 text-sm">夕方</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" name="timeOfDay" value="night" class="text-perfume-purple focus:ring-perfume-purple rounded">
-                                <span class="ml-2 text-sm">夜</span>
-                            </label>
                         </div>
                     </div>
                 </div>

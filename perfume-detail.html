@@ -46,7 +46,7 @@
         .star-filled { color: #D4A574; }
         .star-empty { color: #E5E5E5; }
         
-        /* 香調ピラミッド用スタイル */
+        /* 香調用スタイル */
         .pyramid-container {
             position: relative;
             width: 100%;
@@ -271,7 +271,7 @@
             stroke: #D4A574;
         }
         
-        /* モバイル用の簡略化された香調ピラミッド */
+        /* モバイル用の簡略化された香調 */
         .mobile-pyramid {
             display: none;
         }
@@ -522,7 +522,7 @@
                 margin: 0 auto;
             }
             
-            /* 香調ピラミッドの切り替え */
+            /* 香調の切り替え */
             .pyramid-container {
                 display: none; /* デスクトップ版を非表示 */
             }
@@ -1113,219 +1113,55 @@
                     <!-- 香調タブ -->
                     <div id="notes-content" class="tab-content p-4 lg:p-6 hidden">
                         <div class="space-y-8">
-                            <!-- 香調ピラミッド（デスクトップ版） -->
-                            <div class="hidden md:block">
-                                <h3 class="text-lg font-semibold text-gray-900 mb-6 text-center">香調ピラミッド</h3>
-                                <div class="pyramid-container mb-8">
-                                    <!-- 三角形の背景 -->
-                                    <div class="pyramid-triangle"></div>
-                                    
-                                    <!-- 区切り線 -->
-                                    <div class="pyramid-divider top-divider"></div>
-                                    <div class="pyramid-divider middle-divider"></div>
-                                    
-                                    <!-- トップノート -->
-                                    <div class="pyramid-section pyramid-top">
-                                        <div class="pyramid-left">
-                                            <div class="note-label">トップノート</div>
-                                            <div class="note-description">最初に広がる軽やかな香り</div>
-                                            <div class="note-duration">5分〜15分ほど香る</div>
-                                        </div>
-                                        <div class="pyramid-center">
-                                            <div class="pyramid-ingredients">
-                                                <span data-ingredient="blood-orange">
-                                                    <div class="ingredient-img bg-orange-200 flex items-center justify-center text-xs text-gray-600 border-3 border-orange-300">
-                                                        橙
-                                                    </div>
-                                                </span>
-                                                <span data-ingredient="lemon">
-                                                    <div class="ingredient-img bg-yellow-200 flex items-center justify-center text-xs text-gray-600 border-3 border-yellow-300">
-                                                        檸
-                                                    </div>
-                                                </span>
-                                                <span data-ingredient="pink-pepper">
-                                                    <div class="ingredient-img bg-pink-200 flex items-center justify-center text-xs text-gray-600 border-3 border-pink-300">
-                                                        椒
-                                                    </div>
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="pyramid-right">
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- ミドルノート -->
-                                    <div class="pyramid-section pyramid-middle">
-                                        <div class="pyramid-left">
-                                        </div>
-                                        <div class="pyramid-center">
-                                            <div class="pyramid-ingredients">
-                                                <span data-ingredient="grasse-rose">
-                                                    <div class="ingredient-img bg-rose-200 flex items-center justify-center text-xs text-gray-600 border-3 border-rose-300">
-                                                        薔
-                                                    </div>
-                                                </span>
-                                                <span data-ingredient="peony">
-                                                    <div class="ingredient-img bg-pink-200 flex items-center justify-center text-xs text-gray-600 border-3 border-pink-300">
-                                                        牡
-                                                    </div>
-                                                </span>
-                                                <span data-ingredient="jasmine">
-                                                    <div class="ingredient-img bg-purple-200 flex items-center justify-center text-xs text-gray-600 border-3 border-purple-300">
-                                                        茉
-                                                    </div>
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="pyramid-right">
-                                            <div class="note-label">ミドルノート</div>
-                                            <div class="note-description">香水の核となる華やかな香り</div>
-                                            <div class="note-duration">30分〜2時間ほど香る</div>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- ラストノート -->
-                                    <div class="pyramid-section pyramid-base">
-                                        <div class="pyramid-left">
-                                            <div class="note-label">ラストノート</div>
-                                            <div class="note-description">深みのある持続する香り</div>
-                                            <div class="note-duration">2時間以降も最後まで香る</div>
-                                        </div>
-                                        <div class="pyramid-center">
-                                            <div class="pyramid-ingredients">
-                                                <span data-ingredient="vanilla">
-                                                    <div class="ingredient-img bg-amber-200 flex items-center justify-center text-xs text-gray-600 border-3 border-amber-300">
-                                                        蘭
-                                                    </div>
-                                                </span>
-                                                <span data-ingredient="sandalwood">
-                                                    <div class="ingredient-img bg-yellow-200 flex items-center justify-center text-xs text-gray-600 border-3 border-yellow-300">
-                                                        檀
-                                                    </div>
-                                                </span>
-                                                <span data-ingredient="white-musk">
-                                                    <div class="ingredient-img bg-gray-200 flex items-center justify-center text-xs text-gray-600 border-3 border-gray-300">
-                                                        麝
-                                                    </div>
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="pyramid-right">
-                                            <div class="note-details">
-                                                <h4 class="font-medium text-perfume-purple mb-2">持続性のある香り</h4>
-                                                <p class="text-sm text-gray-600">バニラとサンダルウッドの温かみのある香りが、ホワイトムスクと調和して上品な余韻を演出</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- 香調ピラミッド（モバイル版） -->
-                            <div class="mobile-pyramid md:hidden">
-                                <h3 class="text-lg font-semibold text-gray-900 mb-6 text-center">香調ピラミッド</h3>
+                            <!-- 香調 -->
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-6 text-center">香調</h3>
                                 
                                 <!-- トップノート -->
-                                <div class="note-section top">
-                                    <div class="note-title">
+                                <div class="note-section top mb-6 bg-gradient-to-br from-orange-50 to-yellow-50 p-6 rounded-xl border border-orange-200">
+                                    <div class="note-title text-lg font-semibold text-orange-800 mb-3">
                                         🍊 トップノート
-                                        <span class="text-xs text-gray-500">(5〜15分)</span>
+                                        <span class="text-sm text-gray-500 font-normal">(5〜15分)</span>
                                     </div>
-                                    <div class="note-ingredients">
-                                        <span class="ingredient-tag">ブラッドオレンジ</span>
-                                        <span class="ingredient-tag">レモン</span>
-                                        <span class="ingredient-tag">ピンクペッパー</span>
+                                    <div class="note-ingredients mb-4 flex flex-wrap gap-2">
+                                        <span class="ingredient-tag bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm">ブラッドオレンジ</span>
+                                        <span class="ingredient-tag bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm">レモン</span>
+                                        <span class="ingredient-tag bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm">ピンクペッパー</span>
                                     </div>
-                                    <div class="note-info">
+                                    <div class="note-info text-sm text-gray-700 leading-relaxed">
                                         フレッシュなシトラスの輝きとスパイシーなピンクペッパーが最初に香る、爽やかで印象的な立ち上がり。
                                     </div>
                                 </div>
                                 
                                 <!-- ミドルノート -->
-                                <div class="note-section middle">
-                                    <div class="note-title">
+                                <div class="note-section middle mb-6 bg-gradient-to-br from-pink-50 to-purple-50 p-6 rounded-xl border border-pink-200">
+                                    <div class="note-title text-lg font-semibold text-purple-800 mb-3">
                                         🌸 ミドルノート
-                                        <span class="text-xs text-gray-500">(30分〜2時間)</span>
+                                        <span class="text-sm text-gray-500 font-normal">(30分〜2時間)</span>
                                     </div>
-                                    <div class="note-ingredients">
-                                        <span class="ingredient-tag">グラース産ローズ</span>
-                                        <span class="ingredient-tag">ピオニー</span>
-                                        <span class="ingredient-tag">ジャスミン</span>
+                                    <div class="note-ingredients mb-4 flex flex-wrap gap-2">
+                                        <span class="ingredient-tag bg-pink-100 text-pink-800 px-3 py-1 rounded-full text-sm">グラース産ローズ</span>
+                                        <span class="ingredient-tag bg-pink-100 text-pink-800 px-3 py-1 rounded-full text-sm">ピオニー</span>
+                                        <span class="ingredient-tag bg-pink-100 text-pink-800 px-3 py-1 rounded-full text-sm">ジャスミン</span>
                                     </div>
-                                    <div class="note-info">
+                                    <div class="note-info text-sm text-gray-700 leading-relaxed">
                                         香水の中心となる華やかなフローラルブーケ。上品で女性らしい印象を与える、エレガントな花の香り。
                                     </div>
                                 </div>
                                 
                                 <!-- ベースノート -->
-                                <div class="note-section base">
-                                    <div class="note-title">
+                                <div class="note-section base mb-6 bg-gradient-to-br from-amber-50 to-brown-50 p-6 rounded-xl border border-amber-200">
+                                    <div class="note-title text-lg font-semibold text-amber-800 mb-3">
                                         🪵 ベースノート
-                                        <span class="text-xs text-gray-500">(2時間以降)</span>
+                                        <span class="text-sm text-gray-500 font-normal">(2時間以降)</span>
                                     </div>
-                                    <div class="note-ingredients">
-                                        <span class="ingredient-tag">バニラ</span>
-                                        <span class="ingredient-tag">サンダルウッド</span>
-                                        <span class="ingredient-tag">ホワイトムスク</span>
+                                    <div class="note-ingredients mb-4 flex flex-wrap gap-2">
+                                        <span class="ingredient-tag bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm">バニラ</span>
+                                        <span class="ingredient-tag bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm">サンダルウッド</span>
+                                        <span class="ingredient-tag bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm">ホワイトムスク</span>
                                     </div>
-                                    <div class="note-info">
+                                    <div class="note-info text-sm text-gray-700 leading-relaxed">
                                         温かみのあるバニラとウッディなサンダルウッドが、ホワイトムスクと調和して上品な余韻を演出。
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- 香調の詳細説明 -->
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="bg-gradient-to-br from-orange-50 to-yellow-50 p-6 rounded-xl border border-orange-200">
-                                    <h4 class="font-semibold text-orange-800 mb-3">🍊 トップノート</h4>
-                                    <div class="space-y-2">
-                                        <div class="flex items-center justify-between">
-                                            <span class="text-sm text-gray-700">ブラッドオレンジ</span>
-                                            <span class="text-xs text-orange-600 bg-orange-100 px-2 py-1 rounded-full">シトラス</span>
-                                        </div>
-                                        <div class="flex items-center justify-between">
-                                            <span class="text-sm text-gray-700">レモン</span>
-                                            <span class="text-xs text-orange-600 bg-orange-100 px-2 py-1 rounded-full">フレッシュ</span>
-                                        </div>
-                                        <div class="flex items-center justify-between">
-                                            <span class="text-sm text-gray-700">ベルガモット</span>
-                                            <span class="text-xs text-orange-600 bg-orange-100 px-2 py-1 rounded-full">爽快</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="bg-gradient-to-br from-pink-50 to-purple-50 p-6 rounded-xl border border-pink-200">
-                                    <h4 class="font-semibold text-purple-800 mb-3">🌸 ミドルノート</h4>
-                                    <div class="space-y-2">
-                                        <div class="flex items-center justify-between">
-                                            <span class="text-sm text-gray-700">ローズ</span>
-                                            <span class="text-xs text-purple-600 bg-purple-100 px-2 py-1 rounded-full">フローラル</span>
-                                        </div>
-                                        <div class="flex items-center justify-between">
-                                            <span class="text-sm text-gray-700">ジャスミン</span>
-                                            <span class="text-xs text-purple-600 bg-purple-100 px-2 py-1 rounded-full">エレガント</span>
-                                        </div>
-                                        <div class="flex items-center justify-between">
-                                            <span class="text-sm text-gray-700">ピオニー</span>
-                                            <span class="text-xs text-purple-600 bg-purple-100 px-2 py-1 rounded-full">上品</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="bg-gradient-to-br from-amber-50 to-brown-50 p-6 rounded-xl border border-amber-200">
-                                    <h4 class="font-semibold text-amber-800 mb-3">🪵 ベースノート</h4>
-                                    <div class="space-y-2">
-                                        <div class="flex items-center justify-between">
-                                            <span class="text-sm text-gray-700">バニラ</span>
-                                            <span class="text-xs text-amber-600 bg-amber-100 px-2 py-1 rounded-full">甘美</span>
-                                        </div>
-                                        <div class="flex items-center justify-between">
-                                            <span class="text-sm text-gray-700">サンダルウッド</span>
-                                            <span class="text-xs text-amber-600 bg-amber-100 px-2 py-1 rounded-full">ウッディ</span>
-                                        </div>
-                                        <div class="flex items-center justify-between">
-                                            <span class="text-sm text-gray-700">ホワイトムスク</span>
-                                            <span class="text-xs text-amber-600 bg-amber-100 px-2 py-1 rounded-full">セクシー</span>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1470,7 +1306,9 @@
                             <!-- 類似香水1 -->
                             <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                                 <div class="flex space-x-4">
-                                    <img src="https://via.placeholder.com/80x120" alt="シャネル ココ マドモアゼル" class="w-20 h-30 object-cover rounded">
+                                    <div class="w-20 h-30 bg-gradient-to-br from-purple-100 to-pink-100 rounded flex items-center justify-center">
+                                        <span class="text-gray-500 text-xs text-center">ココ<br>マドモアゼル</span>
+                                    </div>
                                     <div class="flex-1">
                                         <div class="flex items-center justify-between mb-2">
                                             <h4 class="font-semibold text-lg">ココ マドモアゼル</h4>
@@ -1495,7 +1333,9 @@
                             <!-- 類似香水2 -->
                             <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                                 <div class="flex space-x-4">
-                                    <img src="https://via.placeholder.com/80x120" alt="ランコム ラ ヴィ エ ベル" class="w-20 h-30 object-cover rounded">
+                                    <div class="w-20 h-30 bg-gradient-to-br from-rose-100 to-pink-100 rounded flex items-center justify-center">
+                                        <span class="text-gray-500 text-xs text-center">ラ ヴィ<br>エ ベル</span>
+                                    </div>
                                     <div class="flex-1">
                                         <div class="flex items-center justify-between mb-2">
                                             <h4 class="font-semibold text-lg">ラ ヴィ エ ベル</h4>
@@ -1519,7 +1359,9 @@
                             <!-- 類似香水3 -->
                             <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                                 <div class="flex space-x-4">
-                                    <img src="https://via.placeholder.com/80x120" alt="ヴィクター&ロルフ フラワーボム" class="w-20 h-30 object-cover rounded">
+                                    <div class="w-20 h-30 bg-gradient-to-br from-amber-100 to-orange-100 rounded flex items-center justify-center">
+                                        <span class="text-gray-500 text-xs text-center">フラワー<br>ボム</span>
+                                    </div>
                                     <div class="flex-1">
                                         <div class="flex items-center justify-between mb-2">
                                             <h4 class="font-semibold text-lg">フラワーボム</h4>
@@ -1544,7 +1386,9 @@
                             <!-- 類似香水4 -->
                             <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                                 <div class="flex space-x-4">
-                                    <img src="https://via.placeholder.com/80x120" alt="ディオール ミス ディオール" class="w-20 h-30 object-cover rounded">
+                                    <div class="w-20 h-30 bg-gradient-to-br from-blue-100 to-cyan-100 rounded flex items-center justify-center">
+                                        <span class="text-gray-500 text-xs text-center">ミス<br>ディオール</span>
+                                    </div>
                                     <div class="flex-1">
                                         <div class="flex items-center justify-between mb-2">
                                             <h4 class="font-semibold text-lg">ミス ディオール</h4>
@@ -1677,7 +1521,7 @@
             }
         }
 
-        // 香調ピラミッドインタラクション
+        // 香調インタラクション
         document.addEventListener('DOMContentLoaded', function() {
             // 成分にホバー効果を追加
             const ingredients = document.querySelectorAll('[data-ingredient]');
