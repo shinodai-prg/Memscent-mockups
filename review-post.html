@@ -28,7 +28,19 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Noto Sans JP', sans-serif; }
+        body { 
+            font-family: 'Noto Sans JP', sans-serif; 
+            overflow-x: hidden; /* 横スクロール防止 */
+        }
+        
+        html {
+            overflow-x: hidden; /* 横スクロール防止 */
+        }
+        
+        * {
+            box-sizing: border-box; /* ボックスサイジングの統一 */
+        }
+        
         .rating-card {
             background: linear-gradient(135deg, rgba(139, 75, 124, 0.05) 0%, rgba(212, 165, 116, 0.08) 100%);
             border: 1px solid rgba(139, 75, 124, 0.1);
