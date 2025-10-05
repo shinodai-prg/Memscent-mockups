@@ -100,7 +100,7 @@
         
         .mobile-menu-header {
             display: flex;
-            justify-content: between;
+            justify-content: space-between;
             align-items: center;
             padding: 1rem;
             border-bottom: 1px solid #e5e7eb;
@@ -137,6 +137,27 @@
             header nav {
                 display: none !important;
             }
+            
+            /* フィルターパネルをモバイルで下に移動 */
+            .filter-panel {
+                position: static;
+                width: 100%;
+                margin-bottom: 2rem;
+                border-radius: 0.75rem;
+            }
+            
+            .main-layout {
+                flex-direction: column;
+            }
+            
+            .filter-aside {
+                width: 100%;
+                order: 2;
+            }
+            
+            .content-main {
+                order: 1;
+            }
         }
         
         @media (max-width: 768px) {
@@ -149,18 +170,19 @@
                 font-size: 1.5rem;
             }
             
-            /* フィルターパネルをモバイルで非表示 */
-            .filter-panel {
-                display: none;
-            }
-            
             /* 検索結果のグリッド調整 */
             .perfume-grid {
                 grid-template-columns: 1fr;
                 gap: 1rem;
             }
             
-            /* ソートボタンの調整 */
+            /* ソート・ビュー切り替えの調整 */
+            .view-sort-controls {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+            
             .sort-buttons {
                 overflow-x: auto;
                 flex-wrap: nowrap;
@@ -173,12 +195,36 @@
                 font-size: 0.875rem;
                 white-space: nowrap;
             }
+            
+            /* モバイル専用フィルターボタン */
+            .mobile-filter-btn {
+                display: block;
+                width: 100%;
+                margin-bottom: 1rem;
+            }
+            
+            /* フィルターパネルをモバイルでトグル表示 */
+            .filter-panel.mobile-hidden {
+                display: none;
+            }
+            
+            /* 検索結果ヘッダーの調整 */
+            .search-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .search-header select {
+                width: 100%;
+            }
         }
         
         @media (max-width: 640px) {
             /* さらに小さい画面での調整 */
             .perfume-card {
                 padding: 1rem;
+                margin: 0.5rem 0;
             }
             
             .search-stats {
@@ -188,6 +234,36 @@
             .pagination {
                 flex-direction: column;
                 gap: 1rem;
+            }
+            
+            /* グリッド表示の調整 */
+            .perfume-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                padding: 0 0.5rem;
+            }
+            
+            /* ヘッダーの調整 */
+            header nav {
+                display: none !important;
+            }
+            
+            header .search-bar {
+                display: none !important;
+            }
+            
+            header h1 {
+                font-size: 1.5rem;
+            }
+            
+            /* ページタイトルの調整 */
+            .page-title {
+                font-size: 1.5rem;
+                line-height: 1.2;
+            }
+            
+            .result-count {
+                font-size: 0.875rem;
             }
         }
         .price-range {
@@ -430,6 +506,19 @@
             <h2 class="text-lg font-bold text-perfume-purple">メニュー</h2>
             <button class="mobile-menu-close" onclick="closeMobileMenu()">✕</button>
         </div>
+        
+        <!-- モバイル検索バー -->
+        <div class="px-4 py-3 border-b border-gray-200">
+            <div class="flex items-center bg-gray-100 rounded-full px-3 py-2">
+                <svg class="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                <form onsubmit="searchPerfumes(event)" class="flex-1">
+                    <input type="text" id="mobileSearchInput" placeholder="香水名、ブランド..." class="bg-transparent w-full outline-none text-sm">
+                </form>
+            </div>
+        </div>
+        
         <nav class="mobile-menu-nav">
             <a href="index.html">ホーム</a>
             <a href="search-results.html">香水を探す</a>
@@ -448,12 +537,12 @@
     <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-6 lg:py-8">
         <!-- 検索結果ヘッダー -->
         <div class="mb-8">
-            <div class="flex items-center justify-between flex-wrap gap-4">
+            <div class="search-header flex items-center justify-between flex-wrap gap-4">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-900 mb-2">
+                    <h1 class="page-title text-2xl font-bold text-gray-900 mb-2">
                         「<span class="search-highlight">フローラル</span>」の検索結果
                     </h1>
-                    <p class="text-gray-600">
+                    <p class="result-count text-gray-600">
                         <span class="font-semibold text-perfume-purple" id="resultCount">248</span>件の香水が見つかりました
                     </p>
                 </div>
@@ -473,10 +562,18 @@
             </div>
         </div>
 
-        <div class="flex gap-8">
+        <!-- モバイル用フィルターボタン -->
+        <button class="mobile-filter-btn hidden lg:hidden bg-perfume-purple text-white px-4 py-2 rounded-lg mb-4" onclick="toggleMobileFilter()">
+            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+            </svg>
+            フィルター
+        </button>
+
+        <div class="main-layout flex gap-8">
             <!-- フィルターサイドバー -->
-            <aside class="w-80 flex-shrink-0">
-                <div class="filter-panel sticky top-24 rounded-xl shadow-lg p-6 border border-gray-200">
+            <aside class="filter-aside w-80 flex-shrink-0">
+                <div class="filter-panel sticky top-24 rounded-xl shadow-lg p-6 border border-gray-200" id="filterPanel">
                     <h2 class="text-lg font-semibold text-gray-900 mb-6 flex items-center">
                         <svg class="w-5 h-5 mr-2 text-perfume-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
@@ -760,9 +857,9 @@
             </aside>
 
             <!-- 検索結果 -->
-            <main class="flex-1">
+            <main class="content-main flex-1">
                 <!-- ビュー切り替え・ソート -->
-                <div class="flex justify-between items-center mb-6">
+                <div class="view-sort-controls flex justify-between items-center mb-6">
                     <div class="flex items-center space-x-4">
                         <!-- ビュー切り替え -->
                         <div class="flex items-center space-x-2">
@@ -1176,6 +1273,30 @@
             document.body.style.overflow = '';
         }
 
+        // モバイルフィルター機能
+        function toggleMobileFilter() {
+            const filterPanel = document.getElementById('filterPanel');
+            const button = document.querySelector('.mobile-filter-btn');
+            
+            filterPanel.classList.toggle('mobile-hidden');
+            
+            if (filterPanel.classList.contains('mobile-hidden')) {
+                button.innerHTML = `
+                    <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+                    </svg>
+                    フィルターを表示
+                `;
+            } else {
+                button.innerHTML = `
+                    <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                    フィルターを隠す
+                `;
+            }
+        }
+
         // ESCキーでメニューを閉じる
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
@@ -1223,6 +1344,26 @@
         });
 
         // 検索機能
+        function searchPerfumes(event) {
+            event.preventDefault();
+            const headerSearchInput = document.getElementById('searchInput');
+            const mobileSearchInput = document.getElementById('mobileSearchInput');
+            
+            // ヘッダー検索バーまたはモバイル検索バーから検索語を取得
+            const searchTerm = headerSearchInput ? headerSearchInput.value : 
+                             mobileSearchInput ? mobileSearchInput.value : '';
+            
+            console.log('検索:', searchTerm);
+            // 実際の実装では検索結果ページに遷移
+            if (searchTerm.trim()) {
+                window.location.href = `search-results.html?q=${encodeURIComponent(searchTerm)}`;
+            }
+            
+            // モバイルメニューが開いている場合は閉じる
+            closeMobileMenu();
+        }
+
+        // 検索機能
         document.getElementById('searchInput').addEventListener('input', function() {
             const searchTerm = this.value.toLowerCase();
             console.log('検索:', searchTerm);
@@ -1239,6 +1380,34 @@
         function viewPerfumeDetail(perfumeId) {
             window.location.href = `perfume-detail.html?id=${perfumeId}`;
         }
+
+        // 初期化処理
+        document.addEventListener('DOMContentLoaded', function() {
+            // モバイル表示の初期設定
+            const isMobile = window.innerWidth <= 768;
+            const filterPanel = document.getElementById('filterPanel');
+            const mobileFilterBtn = document.querySelector('.mobile-filter-btn');
+            
+            if (isMobile) {
+                mobileFilterBtn.classList.remove('hidden');
+                filterPanel.classList.add('mobile-hidden');
+            }
+            
+            // ウィンドウリサイズ時の処理
+            window.addEventListener('resize', function() {
+                const isMobileNow = window.innerWidth <= 768;
+                
+                if (isMobileNow) {
+                    mobileFilterBtn.classList.remove('hidden');
+                    if (!filterPanel.classList.contains('mobile-hidden')) {
+                        filterPanel.classList.add('mobile-hidden');
+                    }
+                } else {
+                    mobileFilterBtn.classList.add('hidden');
+                    filterPanel.classList.remove('mobile-hidden');
+                }
+            });
+        });
     </script>
 </body>
 </html>

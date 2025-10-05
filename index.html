@@ -85,7 +85,7 @@
         
         .mobile-menu-header {
             display: flex;
-            justify-content: between;
+            justify-content: space-between;
             align-items: center;
             padding: 1rem;
             border-bottom: 1px solid #e5e7eb;
@@ -105,7 +105,8 @@
         }
         
         .mobile-menu-nav a {
-            display: block;
+            display: flex;
+            align-items: center;
             padding: 0.75rem 0;
             color: #374151;
             text-decoration: none;
@@ -115,6 +116,11 @@
         
         .mobile-menu-nav a:hover {
             color: #8B4B7C;
+        }
+        
+        .mobile-menu-nav a svg {
+            margin-right: 0.75rem;
+            flex-shrink: 0;
         }
         
         /* レスポンシブ改善 */
@@ -294,19 +300,6 @@
         </div>
     </header>
 
-    <!-- ユーザープロフィール（ログイン済み状態）-->
-    <div id="user-menu" class="relative group hidden">
-        <button class="flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-full text-sm font-medium transition-colors">
-            <div class="w-6 h-6 bg-perfume-purple rounded-full flex items-center justify-center text-white text-xs">
-                香
-            </div>
-            <span class="hidden sm:block">香子さん</span>
-            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-            </svg>
-        </button>
-    </div>
-
     <!-- モバイルメニュー -->
     <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
     <div class="mobile-menu" id="mobileMenu">
@@ -335,92 +328,20 @@
             <a href="#">ランキング</a>
             <a href="#">コミュニティ</a>
             <div class="border-t border-gray-200 mt-4 pt-4">
-                <a href="user-profile.html" class="flex items-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <a href="user-profile.html" class="flex items-center py-3">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
-                    マイページ
+                    <span>マイページ</span>
                 </a>
-                <a href="#" class="flex items-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <a href="#" class="flex items-center py-3">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                     </svg>
-                    お気に入り
+                    <span>お気に入り</span>
                 </a>
-                <a href="login.html">ログイン</a>
-                <a href="register.html">新規登録</a>
-            </div>
-        </nav>
-    </div>
-                        
-                        <!-- ドロップダウンメニュー -->
-                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                            <div class="py-2">
-                                <a href="user-profile.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                    </svg>
-                                    マイプロフィール
-                                </a>
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                                    </svg>
-                                    お気に入り
-                                </a>
-                                <a href="perfume-register.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                                    </svg>
-                                    香水を登録
-                                </a>
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                    </svg>
-                                    設定
-                                </a>
-                                <hr class="my-1">
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                                    </svg>
-                                    ログアウト
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- モバイルメニューボタン -->
-                    <button class="lg:hidden p-2 text-gray-600 hover:text-perfume-purple transition-colors" onclick="toggleMobileMenu()">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- モバイルメニュー -->
-    <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
-    <div class="mobile-menu" id="mobileMenu">
-        <div class="mobile-menu-header">
-            <h2 class="text-lg font-bold text-perfume-purple">メニュー</h2>
-            <button class="mobile-menu-close" onclick="closeMobileMenu()">✕</button>
-        </div>
-        <nav class="mobile-menu-nav">
-            <a href="index.html">ホーム</a>
-            <a href="search-results.html">香水を探す</a>
-            <a href="perfume-register.html">香水を登録</a>
-            <a href="#">レビュー</a>
-            <a href="#">ランキング</a>
-            <a href="#">コミュニティ</a>
-            <div class="border-t border-gray-200 mt-4 pt-4">
-                <a href="user-profile.html">マイページ</a>
-                <a href="login.html">ログイン</a>
-                <a href="register.html">新規登録</a>
+                <a href="login.html" class="py-3">ログイン</a>
+                <a href="register.html" class="py-3">新規登録</a>
             </div>
         </nav>
     </div>
@@ -794,12 +715,21 @@
         // 検索機能
         function searchPerfumes(event) {
             event.preventDefault();
-            const searchTerm = document.getElementById('headerSearchInput').value.trim();
-            if (searchTerm) {
+            const headerSearchInput = document.getElementById('headerSearchInput');
+            const mobileSearchInput = document.getElementById('mobileSearchInput');
+            
+            // ヘッダー検索バーまたはモバイル検索バーから検索語を取得
+            const searchTerm = headerSearchInput ? headerSearchInput.value : 
+                             mobileSearchInput ? mobileSearchInput.value : '';
+            
+            console.log('検索:', searchTerm);
+            // 実際の実装では検索結果ページに遷移
+            if (searchTerm.trim()) {
                 window.location.href = `search-results.html?q=${encodeURIComponent(searchTerm)}`;
-            } else {
-                window.location.href = 'search-results.html';
             }
+            
+            // モバイルメニューが開いている場合は閉じる
+            closeMobileMenu();
         }
 
         // モバイルメニュー機能
