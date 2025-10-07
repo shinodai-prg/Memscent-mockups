@@ -243,39 +243,107 @@
 <body class="bg-gray-50 min-h-screen">
     <!-- ヘッダー -->
     <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center py-4">
+        <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+            <div class="flex items-center justify-between py-3 lg:py-4">
                 <!-- ロゴ -->
-                <div class="flex items-center">
+                <div class="flex items-center flex-shrink-0 min-w-0">
                     <a href="index.html" class="flex items-center">
-                        <h1 class="text-2xl font-semibold text-perfume-purple font-serif">Memscent</h1>
-                        <span class="ml-2 text-sm text-gray-500 hidden sm:block">あなたの香りの記憶</span>
+                        <h1 class="text-lg sm:text-xl lg:text-2xl font-bold text-perfume-purple font-serif">Memscent</h1>
+                        <span class="ml-2 text-sm text-gray-500 hidden lg:block">あなたの香りの記憶</span>
                     </a>
                 </div>
                 
                 <!-- ナビゲーション（デスクトップ） -->
-                <nav class="hidden md:flex items-center space-x-8">
-                    <a href="index.html" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors">ホーム</a>
-                    <a href="search-results.html" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors">香水を探す</a>
-                    <a href="#" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors">レビュー</a>
-                    <a href="user-profile.html" class="p-2 text-gray-700 hover:text-perfume-purple transition-colors" title="マイページ">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                        </svg>
-                    </a>
+                <nav class="hidden lg:flex items-center space-x-6 mx-8">
+                    <a href="index.html" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors whitespace-nowrap">ホーム</a>
+                    <a href="search-results.html" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors whitespace-nowrap">香水を探す</a>
+                    <a href="#" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors whitespace-nowrap">レビュー</a>
+                    <a href="#" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors whitespace-nowrap">ランキング</a>
+                    <a href="#" class="text-gray-700 hover:text-perfume-purple font-medium transition-colors whitespace-nowrap">コミュニティ</a>
                 </nav>
                 
-                <!-- ユーザーメニュー -->
-                <div class="flex items-center space-x-4">
-                    <!-- ハンバーガーメニューボタン（モバイル） -->
-                    <button class="md:hidden p-2 text-gray-600 hover:text-perfume-purple transition-colors" onclick="toggleMobileMenu()">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                <!-- 右側メニュー -->
+                <div class="flex items-center space-x-2 sm:space-x-3 lg:space-x-4 flex-shrink-0">
+                    <!-- 検索バー -->
+                    <div class="hidden lg:flex items-center bg-gray-100 rounded-full px-3 py-2 w-48 xl:w-64">
+                        <svg class="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <form onsubmit="searchPerfumes(event)" class="flex-1">
+                            <input type="text" id="headerSearchInput" placeholder="香水名、ブランド、香調で検索..." class="bg-transparent w-full outline-none text-sm">
+                        </form>
+                    </div>
+                    
+                    <!-- 検索ボタン（モバイル） -->
+                    <button class="lg:hidden p-1.5 text-gray-600 hover:text-perfume-purple transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </button>
                     
-                    <button onclick="window.location.href='login.html'" class="bg-perfume-purple text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-opacity-90 transition-colors">
-                        ログイン
+                    <!-- お気に入りボタン -->
+                    <!-- <button class="hidden sm:block p-1.5 lg:p-2 text-gray-600 hover:text-perfume-purple transition-colors">
+                        <svg class="w-5 h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                        </svg>
+                    </button> -->
+                    
+                    <!-- ユーザープロフィール（ログイン済み状態） -->
+                    <div class="hidden sm:block relative group">
+                        <button class="flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 px-2 py-1.5 lg:px-3 lg:py-2 rounded-full text-sm font-medium transition-colors">
+                            <div class="w-5 h-5 lg:w-6 lg:h-6 bg-perfume-purple rounded-full flex items-center justify-center text-white text-xs">
+                                香
+                            </div>
+                            <span class="hidden md:block text-xs lg:text-sm">香子さん</span>
+                            <svg class="w-3 h-3 lg:w-4 lg:h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        
+                        <!-- ドロップダウンメニュー -->
+                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <div class="py-2">
+                                <a href="user-profile.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                    マイプロフィール
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                    </svg>
+                                    お気に入り
+                                </a>
+                                <a href="perfume-register.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                    </svg>
+                                    香水を登録
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                    設定
+                                </a>
+                                <hr class="my-1">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                    </svg>
+                                    ログアウト
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- モバイルメニューボタン -->
+                    <button class="lg:hidden p-1.5" onclick="toggleMobileMenu()">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
                     </button>
                 </div>
             </div>
